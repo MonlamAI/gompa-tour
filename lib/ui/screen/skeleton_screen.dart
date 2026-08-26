@@ -12,7 +12,7 @@ import '../../states/bottom_nav_state.dart';
 import '../widget/bottom_nav_bar.dart';
 import 'home_screen.dart';
 import 'map_screen.dart';
-import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
 class SkeletonScreen extends ConsumerWidget {
   const SkeletonScreen({super.key});
@@ -21,7 +21,7 @@ class SkeletonScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final int? navIndex = ref.watch(bottomNavProvider) as int?;
     final currentLanguage = ref.watch(languageProvider).currentLanguage;
-    final isIos = Platform.isIOS;
+    final isIos = defaultTargetPlatform == TargetPlatform.iOS;
 
     // Tab configuration
     List<Map<String, dynamic>> tabConfigurations = _tabConfiguration(context);
@@ -59,23 +59,39 @@ class SkeletonScreen extends ConsumerWidget {
         elevation: 1,
         actions: [
           currentTab["title"] == "home"
-              ? FlutterSwitch(
-                  width: 60,
-                  height: 30,
-                  toggleSize: 20,
-                  valueFontSize: currentLanguage == LanguageState.ENGLISH
-                      ? isIos
-                          ? 16.0
-                          : 14.0
-                      : 12.0,
-                  value: currentLanguage == LanguageState.TIBETAN,
-                  activeText: "EN",
-                  inactiveText: "བོད།",
-                  showOnOff: true,
-                  onToggle: (val) {
-                    ref.read(languageProvider.notifier).setLanguage(
-                        val ? LanguageState.TIBETAN : LanguageState.ENGLISH);
-                  },
+              ? Theme(
+                  data: Theme.of(context).copyWith(
+                    canvasColor: Theme.of(context).colorScheme.surface,
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: currentLanguage,
+                      icon: const Icon(Icons.language, size: 20),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      onChanged: (String? val) {
+                        if (val != null) {
+                          ref.read(languageProvider.notifier).setLanguage(val);
+                        }
+                      },
+                      items: const [
+                        DropdownMenuItem(
+                          value: LanguageState.ENGLISH,
+                          child: Text("EN"),
+                        ),
+                        DropdownMenuItem(
+                          value: LanguageState.TIBETAN,
+                          child: Text("བོད།", style: TextStyle(fontFamily: "TsumachuTibetan")),
+                        ),
+                        DropdownMenuItem(
+                          value: LanguageState.HINDI,
+                          child: Text("हिं"),
+                        ),
+                      ],
+                    ),
+                  ),
                 )
               : const SizedBox(),
           MenuAnchor(
@@ -142,22 +158,38 @@ class SkeletonScreen extends ConsumerWidget {
                           fontWeight: FontWeight.w400,
                         )),
                     const SizedBox(width: 20),
-                    FlutterSwitch(
-                      width: 55,
-                      height: 30,
-                      toggleSize: 20,
-                      valueFontSize: currentLanguage == LanguageState.ENGLISH
-                          ? 16.0
-                          : 12.0,
-                      value: currentLanguage == LanguageState.TIBETAN,
-                      activeText: "EN",
-                      inactiveText: "བོད།",
-                      showOnOff: true,
-                      onToggle: (val) {
-                        ref.read(languageProvider.notifier).setLanguage(val
-                            ? LanguageState.TIBETAN
-                            : LanguageState.ENGLISH);
-                      },
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: currentLanguage,
+                        dropdownColor: Theme.of(context).colorScheme.surface,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: 14,
+                        ),
+                        onChanged: (String? val) {
+                          if (val != null) {
+                            ref
+                                .read(languageProvider.notifier)
+                                .setLanguage(val);
+                          }
+                        },
+                        items: const [
+                          DropdownMenuItem(
+                            value: LanguageState.ENGLISH,
+                            child: Text("EN"),
+                          ),
+                          DropdownMenuItem(
+                            value: LanguageState.TIBETAN,
+                            child: Text("བོད།",
+                                style:
+                                    TextStyle(fontFamily: "TsumachuTibetan")),
+                          ),
+                          DropdownMenuItem(
+                            value: LanguageState.HINDI,
+                            child: Text("हिं"),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

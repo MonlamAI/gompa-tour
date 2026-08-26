@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +71,7 @@ class SettingsScreen extends ConsumerWidget {
           onTap: () {
             // open the app store link
             final String shareUrl =
-                Platform.isIOS ? kIosNeykorAppUrl : kAndriodNeykorAppUrl;
+                defaultTargetPlatform == TargetPlatform.iOS ? kIosNeykorAppUrl : kAndriodNeykorAppUrl;
             Share.share(shareUrl);
           },
         ),
@@ -210,7 +210,7 @@ class SettingsScreen extends ConsumerWidget {
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   // open the app store link
-                  final String downloadUrl = Platform.isIOS
+                  final String downloadUrl = defaultTargetPlatform == TargetPlatform.iOS
                       ? kIosTibetanPrayerAppUrl
                       : kAndriodTibetanPrayerAppUrl;
                   _launchUrl(downloadUrl);

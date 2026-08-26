@@ -133,16 +133,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           locale.languageCode == 'bo'
               ? SizedBox(width: double.infinity, height: 4)
               : const SizedBox(),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: Text(
-              AppLocalizations.of(context)!.deptName,
-              style: TextStyle(
-                fontSize: locale.languageCode == "bo" ? 16 : 16,
-                fontWeight: FontWeight.w500,
-                height: locale.languageCode == "bo" ? 2 : 1.5,
-              ),
+          Text(
+            AppLocalizations.of(context)!.deptName,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              height: locale.languageCode == "bo" ? 2 : 1.5,
             ),
           ),
           locale.languageCode == 'en'

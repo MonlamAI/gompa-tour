@@ -24,7 +24,7 @@ class ApiRepository<T> {
   Future<List<T>> getAll() async {
     try {
       final response = await _client.get(
-        Uri.parse('$baseUrl/$endpoint'),
+        Uri.parse('$baseUrl/$endpoint/'),
       );
       if (response.statusCode == 200) {
         final String decodedBody =
@@ -44,7 +44,7 @@ class ApiRepository<T> {
   ) async {
     try {
       final response = await _client.get(
-        Uri.parse('$baseUrl/$endpoint'),
+        Uri.parse('$baseUrl/$endpoint/'),
       );
 
       if (response.statusCode == 200) {
@@ -101,7 +101,7 @@ class ApiRepository<T> {
   Future<List<T>> searchByTitleAndContent(String query) async {
     try {
       final response = await _client.get(
-        Uri.parse('$baseUrl/$endpoint'),
+        Uri.parse('$baseUrl/$endpoint/'),
       );
 
       if (response.statusCode == 200) {
@@ -123,7 +123,7 @@ class ApiRepository<T> {
   ) async {
     try {
       final response = sect == 'ALL'
-          ? await _client.get(Uri.parse('$baseUrl/$endpoint'))
+          ? await _client.get(Uri.parse('$baseUrl/$endpoint/'))
           : await _client.get(
               Uri.parse('$baseUrl/$endpoint/?sect=$sect'),
             );
@@ -145,7 +145,7 @@ class ApiRepository<T> {
   Future<int> getTotalData() async {
     try {
       final response = await _client.get(
-        Uri.parse('$baseUrl/$endpoint'),
+        Uri.parse('$baseUrl/$endpoint/'),
       );
 
       if (response.statusCode == 200) {

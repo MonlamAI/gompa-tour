@@ -9,6 +9,7 @@ class LanguageState extends ChangeNotifier {
   static const String _languagePreferenceKey = 'app_language';
   static const String ENGLISH = 'en';
   static const String TIBETAN = 'bo';
+  static const String HINDI = 'hi';
 
   LanguageState() {
     _loadLanguage();
@@ -16,7 +17,7 @@ class LanguageState extends ChangeNotifier {
 
   String? _currentLanguage;
 
-  String get currentLanguage => _currentLanguage ?? TIBETAN;
+  String get currentLanguage => _currentLanguage ?? ENGLISH;
 
   Future<void> _loadLanguage() async {
     final prefs = await SharedPreferences.getInstance();

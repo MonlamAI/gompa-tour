@@ -112,19 +112,35 @@ class GonpaAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   fontWeight: FontWeight.w400,
                 )),
             const SizedBox(width: 20),
-            FlutterSwitch(
-              width: 55,
-              height: 30,
-              toggleSize: 20,
-              valueFontSize: 12.0,
-              value: currentLanguage == LanguageState.TIBETAN,
-              activeText: "བོད།",
-              inactiveText: "EN",
-              showOnOff: true,
-              onToggle: (val) {
-                ref.read(languageProvider.notifier).setLanguage(
-                    val ? LanguageState.TIBETAN : LanguageState.ENGLISH);
-              },
+            DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: currentLanguage,
+                dropdownColor: Theme.of(context).colorScheme.surface,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 14,
+                ),
+                onChanged: (String? val) {
+                  if (val != null) {
+                    ref.read(languageProvider.notifier).setLanguage(val);
+                  }
+                },
+                items: const [
+                  DropdownMenuItem(
+                    value: LanguageState.ENGLISH,
+                    child: Text("EN"),
+                  ),
+                  DropdownMenuItem(
+                    value: LanguageState.TIBETAN,
+                    child: Text("བོད།",
+                        style: TextStyle(fontFamily: "TsumachuTibetan")),
+                  ),
+                  DropdownMenuItem(
+                    value: LanguageState.HINDI,
+                    child: Text("हिं"),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
