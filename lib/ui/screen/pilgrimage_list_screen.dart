@@ -7,6 +7,7 @@ import 'package:gompa_tour/states/recent_search.dart';
 import 'package:gompa_tour/ui/widget/gonpa_app_bar.dart';
 import 'package:gompa_tour/ui/widget/pilgrimage_card_item.dart';
 import 'package:gompa_tour/util/search_debouncer.dart';
+import 'package:gompa_tour/util/string_extensions.dart';
 import 'package:gompa_tour/l10n/generated/app_localizations.dart';
 
 enum ViewType { grid, list }
@@ -95,6 +96,7 @@ class _PilgrimageListScreenState extends ConsumerState<PilgrimageListScreen> {
                     : Expanded(
                         child: _currentView == ViewType.list
                             ? ListView.builder(
+                                padding: const EdgeInsets.only(bottom: 100),
                                 physics: const BouncingScrollPhysics(),
                                 itemCount:
                                     pilgrimSiteState.pilgrimSites.length +
@@ -114,12 +116,18 @@ class _PilgrimageListScreenState extends ConsumerState<PilgrimageListScreen> {
                                 },
                               )
                             : GridView.builder(
+                                padding: const EdgeInsets.only(
+                                  left: 12,
+                                  right: 12,
+                                  top: 4,
+                                  bottom: 100,
+                                ),
                                 gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                   childAspectRatio: 0.75,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
                                 ),
                                 physics: const BouncingScrollPhysics(),
                                 itemCount:
@@ -149,7 +157,7 @@ class _PilgrimageListScreenState extends ConsumerState<PilgrimageListScreen> {
 
   Widget _buildToggleView() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -160,129 +168,282 @@ class _PilgrimageListScreenState extends ConsumerState<PilgrimageListScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          // dropdown for unqiue states
-          DropdownButton2<String>(
-            isExpanded: true,
-            value: _selectedState,
-            hint: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                AppLocalizations.of(context)!.allStates,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
-                ),
+          // Grouped dropdown for unique states
+          Container(
+            height: 36,
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Theme.of(context)
+                    .colorScheme
+                    .outlineVariant
+                    .withValues(alpha: 0.3),
               ),
             ),
-            items: [
-              // DropdownMenuItem<String>(
-              //   value: null,
-              //   child: Text(
-              //     'All States',
-              //     style: const TextStyle(fontSize: 14),
-              //   ),
-              // ),
-              ...StateData.stateTranslationForPilgrim.entries.map(
-                (state) {
-                  return DropdownMenuItem<String>(
-                    value: state.key,
-                    child: Text(
-                      StateData.getLocalizedStateNameForPilgrim(
-                        state.key,
-                        Localizations.localeOf(context).languageCode,
-                      ),
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  );
-                },
-              ),
-            ],
-            onChanged: (String? value) {
-              setState(() {
-                _selectedState = value;
-              });
-              value == null
-                  ? _loadInitialPilgrimSites()
-                  : pilgrimSiteNotifier.filterPilgrimSites(value);
-            },
-            buttonStyleData: ButtonStyleData(
-              height: 40,
-              width: 120,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Theme.of(context).colorScheme.surface,
-              ),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Theme.of(context).colorScheme.surface,
-              ),
-            ),
-            menuItemStyleData: const MenuItemStyleData(
-              height: 40,
-              padding: EdgeInsets.symmetric(horizontal: 8),
-            ),
-            iconStyleData: IconStyleData(
-              icon: _selectedState != null
-                  ? GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedState = null;
-                        });
-                        _loadInitialPilgrimSites();
-                      },
-                      child: Icon(
-                        Icons.close,
+            padding: const EdgeInsets.all(2),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<String>(
+                isExpanded: true,
+                underline: const SizedBox(),
+                value: _selectedState,
+                hint: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 22,
+                      height: 22,
+                      decoration: BoxDecoration(
                         color: Theme.of(context)
                             .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.7),
+                            .primary
+                            .withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
                       ),
-                    )
-                  : Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
+                      child: Icon(
+                        Icons.location_on_outlined,
+                        size: 13,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppLocalizations.of(context)!.allStates,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.7),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                selectedItemBuilder: (BuildContext context) {
+                  return StateData.stateTranslationForPilgrim.entries.map((state) {
+                    String stateName =
+                        StateData.getLocalizedStateNameForPilgrim(
+                      state.key,
+                      Localizations.localeOf(context).languageCode,
+                    );
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 22,
+                          height: 22,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withValues(alpha: 0.15),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.location_on_outlined,
+                            size: 13,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            Localizations.localeOf(context).languageCode == "en"
+                                ? stateName.toPascalCase()
+                                : stateName,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList();
+                },
+                items: StateData.stateTranslationForPilgrim.entries.map(
+                  (state) {
+                    String stateName =
+                        StateData.getLocalizedStateNameForPilgrim(
+                      state.key,
+                      Localizations.localeOf(context).languageCode,
+                    );
+                    return DropdownMenuItem<String>(
+                      value: state.key,
+                      child: Text(
+                        Localizations.localeOf(context).languageCode == "en"
+                            ? stateName.toPascalCase()
+                            : stateName,
+                        style: const TextStyle(fontSize: 12),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                  },
+                ).toList(),
+                onChanged: (String? value) {
+                  setState(() {
+                    _selectedState = value;
+                  });
+                  value == null
+                      ? _loadInitialPilgrimSites()
+                      : pilgrimSiteNotifier.filterPilgrimSites(value);
+                },
+                buttonStyleData: ButtonStyleData(
+                  height: 36,
+                  width: 125,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: _selectedState != null
+                        ? Theme.of(context).colorScheme.surface
+                        : Colors.transparent,
+                  ),
+                ),
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: 220,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF27272a)
+                        : Theme.of(context).colorScheme.surface,
+                  ),
+                ),
+                menuItemStyleData: const MenuItemStyleData(
+                  height: 40,
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                ),
+                iconStyleData: IconStyleData(
+                  icon: _selectedState != null
+                      ? GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedState = null;
+                            });
+                            _loadInitialPilgrimSites();
+                          },
+                          child: Icon(
+                            Icons.close,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.7),
+                          ),
+                        )
+                      : Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.7),
+                        ),
+                ),
+              ),
             ),
           ),
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.list_alt,
-                  color: _currentView == ViewType.list
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.onSurface,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _currentView = ViewType.list;
-                  });
-                },
+          Container(
+            height: 36,
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Theme.of(context)
+                    .colorScheme
+                    .outlineVariant
+                    .withValues(alpha: 0.3),
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.grid_view,
-                  color: _currentView == ViewType.grid
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.onSurface,
+            ),
+            padding: const EdgeInsets.all(2),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    setState(() {
+                      _currentView = ViewType.list;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: _currentView == ViewType.list
+                          ? Theme.of(context).colorScheme.surface
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: _currentView == ViewType.list
+                          ? [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              )
+                            ]
+                          : null,
+                    ),
+                    child: Icon(
+                      Icons.list_alt,
+                      size: 20,
+                      color: _currentView == ViewType.list
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.6),
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  setState(() {
-                    _currentView = ViewType.grid;
-                  });
-                },
-              ),
-            ],
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    setState(() {
+                      _currentView = ViewType.grid;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: _currentView == ViewType.grid
+                          ? Theme.of(context).colorScheme.surface
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: _currentView == ViewType.grid
+                          ? [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              )
+                            ]
+                          : null,
+                    ),
+                    child: Icon(
+                      Icons.grid_view,
+                      size: 20,
+                      color: _currentView == ViewType.grid
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.6),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

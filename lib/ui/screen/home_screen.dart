@@ -105,7 +105,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       children: [
         _buildHeader(context),
         _buildSearchBar(context),
-        const Divider(),
         if (isLoading)
           const Center(child: CircularProgressIndicator())
         else
@@ -125,13 +124,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 28,
-        vertical: 12,
+        vertical: locale.languageCode == 'bo' ? 6 : 10,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           locale.languageCode == 'bo'
-              ? SizedBox(width: double.infinity, height: 4)
+              ? const SizedBox(height: 2)
               : const SizedBox(),
           Text(
             AppLocalizations.of(context)!.deptName,
@@ -139,7 +138,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              height: locale.languageCode == "bo" ? 2 : 1.5,
+              height: locale.languageCode == "bo" ? 1.6 : 1.5,
             ),
           ),
           locale.languageCode == 'en'
@@ -214,42 +213,57 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return _searchController.text.isEmpty
         ? Expanded(
-            child: GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              padding: EdgeInsets.all(8),
-              physics: isKeyboardVisible
-                  ? const BouncingScrollPhysics()
-                  : const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              childAspectRatio: 0.8,
-              children: [
-                _buildCard(
-                  MenuType.deities,
-                  'assets/images/statues.jpg',
-                  context,
-                  totalStatue,
-                ),
-                _buildCard(
-                  MenuType.organization,
-                  'assets/images/monsatery.jpeg',
-                  context,
-                  totalGonpa,
-                ),
-                _buildCard(
-                  MenuType.pilgrimage,
-                  'assets/images/pilgrimage.jpg',
-                  context,
-                  totalPilgrimSite,
-                ),
-                _buildCard(
-                  MenuType.festival,
-                  'assets/images/Festivals.jpeg',
-                  context,
-                  totalFestival,
-                ),
-              ],
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final availableHeight = constraints.maxHeight - 20;
+                final availableWidth = constraints.maxWidth - 32;
+                final itemWidth = (availableWidth - 10) / 2;
+                final itemHeight = (availableHeight - 10) / 2;
+                final calculatedRatio = availableHeight > 100
+                    ? (itemWidth / itemHeight).clamp(0.72, 0.95)
+                    : 0.85;
+
+                return GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    top: 4,
+                    bottom: 16,
+                  ),
+                  physics: const BouncingScrollPhysics(),
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: calculatedRatio,
+                  children: [
+                    _buildCard(
+                      MenuType.deities,
+                      'assets/images/statues.jpg',
+                      context,
+                      totalStatue,
+                    ),
+                    _buildCard(
+                      MenuType.organization,
+                      'assets/images/monsatery.jpeg',
+                      context,
+                      totalGonpa,
+                    ),
+                    _buildCard(
+                      MenuType.pilgrimage,
+                      'assets/images/pilgrimage.jpg',
+                      context,
+                      totalPilgrimSite,
+                    ),
+                    _buildCard(
+                      MenuType.festival,
+                      'assets/images/Festivals.jpeg',
+                      context,
+                      totalFestival,
+                    ),
+                  ],
+                );
+              },
             ),
           )
         : const SizedBox();
@@ -277,6 +291,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         }
       },
       child: Card(
+        margin: EdgeInsets.zero,
         color: Theme.of(context).colorScheme.surfaceContainer,
         child: Column(
           children: [
@@ -288,7 +303,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
                     imagePath,
-                    fit: BoxFit.contain,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -301,17 +317,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   Text(
                     _getTitle(type, context),
                     style: TextStyle(
-                      fontSize: locale.languageCode == 'bo' ? 20 : 22,
+                      fontSize: locale.languageCode == 'bo' ? 18 : 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   Text(count.toString(),
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 15,
                         color: Colors.grey.shade600,
                       )),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                 ],
               ),
             ),
@@ -330,6 +346,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return searchState.results.isNotEmpty
         ? Expanded(
             child: ListView.builder(
+              padding: const EdgeInsets.only(bottom: 100),
               itemCount: searchState.results.length,
               itemBuilder: (context, index) {
                 var searchableItem = searchState.results[index];

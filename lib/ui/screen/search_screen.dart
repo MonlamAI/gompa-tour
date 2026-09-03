@@ -167,7 +167,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ),
             Expanded(
               child: GridView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
+                  top: 0.0,
+                  bottom: 100.0,
+                ),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   childAspectRatio: 1,
@@ -209,6 +214,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           ] else ...[
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.only(bottom: 100.0),
                 itemCount: searchState.results.length,
                 itemBuilder: (context, index) {
                   final searchableItem = searchState.results[index];

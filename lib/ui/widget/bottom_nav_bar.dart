@@ -10,13 +10,22 @@ class BottomNavBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final int? navIndex = ref.watch(bottomNavProvider) as int?;
+    final int navIndex = (ref.watch(bottomNavProvider) as int?) ?? 0;
+    final theme = Theme.of(context);
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+    final items = [
+      (Icons.home, AppLocalizations.of(context)!.home),
+      (Icons.map, AppLocalizations.of(context)!.map),
+      (Icons.qr_code, AppLocalizations.of(context)!.qr),
+      (Icons.person, AppLocalizations.of(context)!.settings),
+    ];
 
     return Card(
-      margin: const EdgeInsets.all(0),
-      elevation: Theme.of(context).bottomNavigationBarTheme.elevation,
-      shadowColor: Theme.of(context).colorScheme.shadow,
-      color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+      margin: EdgeInsets.zero,
+      elevation: theme.bottomNavigationBarTheme.elevation ?? 8,
+      shadowColor: theme.colorScheme.shadow,
+      color: theme.bottomNavigationBarTheme.backgroundColor ?? theme.colorScheme.surface,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: const BorderRadius.only(
@@ -24,39 +33,40 @@ class BottomNavBar extends ConsumerWidget {
           topRight: Style.radiusLg,
         ),
         side: BorderSide(
-          color: Theme.of(context).shadowColor,
+          color: theme.shadowColor,
           strokeAlign: BorderSide.strokeAlignInside,
         ),
       ),
-      child: BottomNavigationBar(
-        iconSize: 30,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        currentIndex: navIndex ?? 0,
-        onTap: (int index) {
-          ref.read(bottomNavProvider.notifier).setAndPersistValue(index);
-        },
-        type: BottomNavigationBarType.fixed,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home), //bot_20_regular
-            label: AppLocalizations.of(context)!.home,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.map),
-            label: AppLocalizations.of(context)!.map,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.qr_code),
-            label: AppLocalizations.of(context)!.qr,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person),
-            label: AppLocalizations.of(context)!.settings,
-          ),
-        ],
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: 18,
+          bottom: bottomPadding > 0 ? bottomPadding + 10 : 18,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: List.generate(items.length, (index) {
+            final isSelected = index == navIndex;
+            final item = items[index];
+            return InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                ref.read(bottomNavProvider.notifier).setAndPersistValue(index);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Icon(
+                  item.$1,
+                  size: 32,
+                  color: isSelected
+                      ? (theme.bottomNavigationBarTheme.selectedItemColor ?? theme.colorScheme.primary)
+                      : (theme.bottomNavigationBarTheme.unselectedItemColor ??
+                          theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                ),
+              ),
+            );
+          }),
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:gompa_tour/states/language_state.dart';
 import 'package:gompa_tour/states/theme_mode_state.dart';
+import 'package:gompa_tour/ui/widget/language_dropdown.dart';
 import 'package:gompa_tour/ui/screen/qr_screen.dart';
 import 'package:gompa_tour/ui/screen/search_screen.dart';
 import 'package:gompa_tour/ui/screen/settings_screen.dart';
@@ -59,39 +60,9 @@ class SkeletonScreen extends ConsumerWidget {
         elevation: 1,
         actions: [
           currentTab["title"] == "home"
-              ? Theme(
-                  data: Theme.of(context).copyWith(
-                    canvasColor: Theme.of(context).colorScheme.surface,
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: currentLanguage,
-                      icon: const Icon(Icons.language, size: 20),
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                      onChanged: (String? val) {
-                        if (val != null) {
-                          ref.read(languageProvider.notifier).setLanguage(val);
-                        }
-                      },
-                      items: const [
-                        DropdownMenuItem(
-                          value: LanguageState.ENGLISH,
-                          child: Text("EN"),
-                        ),
-                        DropdownMenuItem(
-                          value: LanguageState.TIBETAN,
-                          child: Text("བོད།", style: TextStyle(fontFamily: "TsumachuTibetan")),
-                        ),
-                        DropdownMenuItem(
-                          value: LanguageState.HINDI,
-                          child: Text("हिं"),
-                        ),
-                      ],
-                    ),
-                  ),
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                  child: LanguageDropdown(isCompact: true),
                 )
               : const SizedBox(),
           MenuAnchor(
@@ -118,7 +89,7 @@ class SkeletonScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  minimumSize: WidgetStateProperty.all(Size(190, 48))),
+          minimumSize: WidgetStateProperty.all(const Size(220, 48))),
               menuChildren: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,39 +129,7 @@ class SkeletonScreen extends ConsumerWidget {
                           fontWeight: FontWeight.w400,
                         )),
                     const SizedBox(width: 20),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: currentLanguage,
-                        dropdownColor: Theme.of(context).colorScheme.surface,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontSize: 14,
-                        ),
-                        onChanged: (String? val) {
-                          if (val != null) {
-                            ref
-                                .read(languageProvider.notifier)
-                                .setLanguage(val);
-                          }
-                        },
-                        items: const [
-                          DropdownMenuItem(
-                            value: LanguageState.ENGLISH,
-                            child: Text("EN"),
-                          ),
-                          DropdownMenuItem(
-                            value: LanguageState.TIBETAN,
-                            child: Text("བོད།",
-                                style:
-                                    TextStyle(fontFamily: "TsumachuTibetan")),
-                          ),
-                          DropdownMenuItem(
-                            value: LanguageState.HINDI,
-                            child: Text("हिं"),
-                          ),
-                        ],
-                      ),
-                    ),
+            const LanguageDropdown(),
                   ],
                 ),
               ]),

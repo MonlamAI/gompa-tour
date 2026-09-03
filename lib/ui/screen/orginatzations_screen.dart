@@ -144,6 +144,7 @@ class _OrginatzationsScreenState extends ConsumerState<OrginatzationsScreen> {
   Widget _buildSectListCard(BuildContext context) {
     return Expanded(
       child: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 100),
         physics: const BouncingScrollPhysics(),
         itemCount: groupedGonpas.length,
         itemBuilder: (context, index) {
@@ -165,7 +166,7 @@ class _OrginatzationsScreenState extends ConsumerState<OrginatzationsScreen> {
               shadowColor: Theme.of(context).colorScheme.shadow,
               color: Theme.of(context).colorScheme.surfaceContainer,
               margin: const EdgeInsets.only(
-                  left: 16, right: 16, top: 16, bottom: 0),
+                  left: 16, right: 16, top: 10, bottom: 0),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -221,6 +222,7 @@ class _OrginatzationsScreenState extends ConsumerState<OrginatzationsScreen> {
       BuildContext context, GonpaListState gonpaState) {
     return Expanded(
       child: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 100),
         physics: const BouncingScrollPhysics(),
         itemCount: gonpaState.gonpas.length,
         itemBuilder: (context, index) {

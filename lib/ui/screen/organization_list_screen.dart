@@ -110,6 +110,7 @@ class _OrganizationListScreenState
                     : Expanded(
                         child: _currentView == ViewType.list
                             ? ListView.builder(
+                                padding: const EdgeInsets.only(bottom: 100),
                                 physics: const BouncingScrollPhysics(),
                                 itemCount: gonpaState.gonpas.length +
                                     (gonpaState.isLoading ? 1 : 0),
@@ -126,12 +127,18 @@ class _OrganizationListScreenState
                                 },
                               )
                             : GridView.builder(
+                                padding: const EdgeInsets.only(
+                                  left: 12,
+                                  right: 12,
+                                  top: 4,
+                                  bottom: 100,
+                                ),
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                   childAspectRatio: 0.75,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
                                 ),
                                 physics: const BouncingScrollPhysics(),
                                 itemCount: gonpaState.gonpas.length +
@@ -192,248 +199,466 @@ class _OrganizationListScreenState
 
   Widget _buildToggleView(GonpaListState gonpaState) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Dropdown for gonpa types
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              DropdownButton2<String>(
-                isExpanded: true,
-                value: _selectedType,
-                hint: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    AppLocalizations.of(context)!.gonpaTypes,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
-                    ),
-                  ),
-                ),
-                items: [
-                  // DropdownMenuItem<String>(
-                  //   value: null,
-                  //   child: Text(
-                  //     AppLocalizations.of(context)!.gonpaTypes,
-                  //     style: const TextStyle(fontSize: 14),
-                  //   ),
-                  // ),
-                  ...TypeData.typeTranslations.entries.map(
-                    (type) => DropdownMenuItem<String>(
-                      value: type.key,
-                      child: Text(
-                        TypeData.getLocalizedTypeName(
-                          type.key,
-                          Localizations.localeOf(context).languageCode,
-                        ),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ),
-                  ),
-                ],
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedType = value;
-                  });
-                  gonpaNotifier.filterGonpas(
-                    sect: widget.sect!,
-                    type: value,
-                    stateFilter: _selectedState,
-                  );
-                },
-                buttonStyleData: ButtonStyleData(
-                  height: 40,
-                  width: 130,
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  maxHeight: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                ),
-                menuItemStyleData: const MenuItemStyleData(
-                  height: 40,
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                ),
-                iconStyleData: IconStyleData(
-                  icon: _selectedType != null
-                      ? GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedType = null;
-                            });
-                            gonpaNotifier.filterGonpas(
-                              sect: widget.sect!,
-                              type: null,
-                              stateFilter: _selectedState,
-                            );
-                          },
-                          child: Icon(
-                            Icons.close,
+          // Grouped Container for gonpa types and states filters
+          Container(
+            height: 36,
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Theme.of(context)
+                    .colorScheme
+                    .outlineVariant
+                    .withValues(alpha: 0.3),
+              ),
+            ),
+            padding: const EdgeInsets.all(2),
+            child: DropdownButtonHideUnderline(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DropdownButton2<String>(
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    value: _selectedType,
+                    hint: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 22,
+                          height: 22,
+                          decoration: BoxDecoration(
                             color: Theme.of(context)
                                 .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.7),
+                                .primary
+                                .withValues(alpha: 0.15),
+                            shape: BoxShape.circle,
                           ),
-                        )
-                      : Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
+                          child: Icon(
+                            Icons.category_outlined,
+                            size: 13,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
-                ),
-              ),
-              // dropdown for unqiue states
-              DropdownButton2<String>(
-                isExpanded: true,
-                value: _selectedState?.toUpperCase(),
-                hint: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    AppLocalizations.of(context)!.allStates,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              AppLocalizations.of(context)!.gonpaTypes,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                items: [
-                  // DropdownMenuItem<String>(
-                  //   value: null,
-                  //   child: Text(
-                  //     AppLocalizations.of(context)!.allStates,
-                  //     style: const TextStyle(fontSize: 12),
-                  //   ),
-                  // ),
-                  ...StateData.stateTranslationsForGonpa.entries.map(
-                    (state) {
-                      String stateName =
-                          StateData.getLocalizedStateNameForGonpa(
-                        state.key,
-                        Localizations.localeOf(context).languageCode,
-                      );
-                      return DropdownMenuItem<String>(
-                        value: state.key,
+                    selectedItemBuilder: (BuildContext context) {
+                      return TypeData.typeTranslations.entries.map((type) {
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 22,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withValues(alpha: 0.15),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.category_outlined,
+                                size: 13,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                TypeData.getLocalizedTypeName(
+                                  type.key,
+                                  Localizations.localeOf(context).languageCode,
+                                ),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList();
+                    },
+                    items: TypeData.typeTranslations.entries.map(
+                      (type) => DropdownMenuItem<String>(
+                        value: type.key,
                         child: Text(
-                          Localizations.localeOf(context).languageCode == "en"
-                              ? stateName.toPascalCase()
-                              : stateName,
+                          TypeData.getLocalizedTypeName(
+                            type.key,
+                            Localizations.localeOf(context).languageCode,
+                          ),
                           style: const TextStyle(fontSize: 12),
                           overflow: TextOverflow.ellipsis,
                         ),
+                      ),
+                    ).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _selectedType = value;
+                      });
+                      gonpaNotifier.filterGonpas(
+                        sect: widget.sect!,
+                        type: value,
+                        stateFilter: _selectedState,
                       );
                     },
+                    buttonStyleData: ButtonStyleData(
+                      height: 36,
+                      width: 125,
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: _selectedType != null
+                            ? Theme.of(context).colorScheme.surface
+                            : Colors.transparent,
+                      ),
+                    ),
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 220,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF27272a)
+                            : Theme.of(context).colorScheme.surface,
+                      ),
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      height: 40,
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                    ),
+                    iconStyleData: IconStyleData(
+                      icon: _selectedType != null
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedType = null;
+                                });
+                                gonpaNotifier.filterGonpas(
+                                  sect: widget.sect!,
+                                  type: null,
+                                  stateFilter: _selectedState,
+                                );
+                              },
+                              child: Icon(
+                                Icons.close,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                            )
+                          : Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.7),
+                            ),
+                    ),
                   ),
-                ],
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedState = value;
-                  });
-                  gonpaNotifier.filterGonpas(
-                    sect: widget.sect!,
-                    type: _selectedType,
-                    stateFilter: value,
-                  );
-                },
-                buttonStyleData: ButtonStyleData(
-                  height: 40,
-                  width: 130,
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Theme.of(context).colorScheme.surface,
+                  Container(
+                    height: 18,
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .outlineVariant
+                        .withValues(alpha: 0.4),
                   ),
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  maxHeight: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                ),
-                menuItemStyleData: const MenuItemStyleData(
-                  height: 40,
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                ),
-                iconStyleData: IconStyleData(
-                  icon: _selectedState != null
-                      ? GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedState = null;
-                            });
-                            gonpaNotifier.filterGonpas(
-                              sect: widget.sect!,
-                              type: _selectedType,
-                              stateFilter: null,
-                            );
-                          },
-                          child: Icon(
-                            Icons.close,
+                  // dropdown for unique states
+                  DropdownButton2<String>(
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    value: _selectedState?.toUpperCase(),
+                    hint: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 22,
+                          height: 22,
+                          decoration: BoxDecoration(
                             color: Theme.of(context)
                                 .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.7),
+                                .primary
+                                .withValues(alpha: 0.15),
+                            shape: BoxShape.circle,
                           ),
-                        )
-                      : Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Theme.of(context)
+                          child: Icon(
+                            Icons.location_on_outlined,
+                            size: 13,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              AppLocalizations.of(context)!.allStates,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    selectedItemBuilder: (BuildContext context) {
+                      return StateData.stateTranslationsForGonpa.entries.map((state) {
+                        String stateName =
+                            StateData.getLocalizedStateNameForGonpa(
+                          state.key,
+                          Localizations.localeOf(context).languageCode,
+                        );
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 22,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withValues(alpha: 0.15),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.location_on_outlined,
+                                size: 13,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                Localizations.localeOf(context).languageCode == "en"
+                                    ? stateName.toPascalCase()
+                                    : stateName,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList();
+                    },
+                    items: StateData.stateTranslationsForGonpa.entries.map(
+                      (state) {
+                        String stateName =
+                            StateData.getLocalizedStateNameForGonpa(
+                          state.key,
+                          Localizations.localeOf(context).languageCode,
+                        );
+                        return DropdownMenuItem<String>(
+                          value: state.key,
+                          child: Text(
+                            Localizations.localeOf(context).languageCode == "en"
+                                ? stateName.toPascalCase()
+                                : stateName,
+                            style: const TextStyle(fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      },
+                    ).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _selectedState = value;
+                      });
+                      gonpaNotifier.filterGonpas(
+                        sect: widget.sect!,
+                        type: _selectedType,
+                        stateFilter: value,
+                      );
+                    },
+                    buttonStyleData: ButtonStyleData(
+                      height: 36,
+                      width: 125,
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: _selectedState != null
+                            ? Theme.of(context).colorScheme.surface
+                            : Colors.transparent,
+                      ),
+                    ),
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 220,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF27272a)
+                            : Theme.of(context).colorScheme.surface,
+                      ),
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      height: 40,
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                    ),
+                    iconStyleData: IconStyleData(
+                      icon: _selectedState != null
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedState = null;
+                                });
+                                gonpaNotifier.filterGonpas(
+                                  sect: widget.sect!,
+                                  type: _selectedType,
+                                  stateFilter: null,
+                                );
+                              },
+                              child: Icon(
+                                Icons.close,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                            )
+                          : Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.7),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            height: 36,
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Theme.of(context)
+                    .colorScheme
+                    .outlineVariant
+                    .withValues(alpha: 0.3),
+              ),
+            ),
+            padding: const EdgeInsets.all(2),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    setState(() {
+                      _currentView = ViewType.list;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: _currentView == ViewType.list
+                          ? Theme.of(context).colorScheme.surface
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: _currentView == ViewType.list
+                          ? [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              )
+                            ]
+                          : null,
+                    ),
+                    child: Icon(
+                      Icons.list_alt,
+                      size: 20,
+                      color: _currentView == ViewType.list
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withValues(alpha: 0.7),
-                        ),
+                              .withValues(alpha: 0.6),
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.list_alt,
-                  color: _currentView == ViewType.list
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.onSurface,
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    setState(() {
+                      _currentView = ViewType.grid;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: _currentView == ViewType.grid
+                          ? Theme.of(context).colorScheme.surface
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: _currentView == ViewType.grid
+                          ? [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              )
+                            ]
+                          : null,
+                    ),
+                    child: Icon(
+                      Icons.grid_view,
+                      size: 20,
+                      color: _currentView == ViewType.grid
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.6),
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  setState(() {
-                    _currentView = ViewType.list;
-                  });
-                },
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.grid_view,
-                  color: _currentView == ViewType.grid
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.onSurface,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _currentView = ViewType.grid;
-                  });
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

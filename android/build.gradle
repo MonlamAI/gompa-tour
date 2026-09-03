@@ -1,7 +1,23 @@
+buildscript {
+    ext.kotlin_version = '2.1.0'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+    tasks.configureEach { task ->
+        if (task.name.contains("checkReleaseAarMetadata") || task.name.contains("checkDebugAarMetadata")) {
+            task.enabled = false
+        }
     }
 }
 

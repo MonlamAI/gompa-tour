@@ -81,6 +81,7 @@ class _DeitiesListScreenState extends ConsumerState<DeitiesListScreen> {
                       : Expanded(
                           child: _currentView == ViewType.list
                               ? ListView.builder(
+                                  padding: const EdgeInsets.only(bottom: 100),
                                   physics: const BouncingScrollPhysics(),
                                   itemCount: statueState.statues.length +
                                       (statueState.isLoading ? 1 : 0),
@@ -98,12 +99,18 @@ class _DeitiesListScreenState extends ConsumerState<DeitiesListScreen> {
                                 )
                               : GridView.builder(
                                   physics: const BouncingScrollPhysics(),
+                                  padding: const EdgeInsets.only(
+                                    left: 12,
+                                    right: 12,
+                                    top: 4,
+                                    bottom: 100,
+                                  ),
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
                                     childAspectRatio: 0.75,
-                                    crossAxisSpacing: 10,
-                                    mainAxisSpacing: 10,
+                                    crossAxisSpacing: 12,
+                                    mainAxisSpacing: 12,
                                   ),
                                   itemCount: statueState.statues.length +
                                       (statueState.isLoading ? 1 : 0),
@@ -127,7 +134,7 @@ class _DeitiesListScreenState extends ConsumerState<DeitiesListScreen> {
 
   Widget _buildToggleView() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -138,35 +145,99 @@ class _DeitiesListScreenState extends ConsumerState<DeitiesListScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.list_alt,
-                  color: _currentView == ViewType.list
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.onSurface,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _currentView = ViewType.list;
-                  });
-                },
+          Container(
+            height: 36,
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Theme.of(context)
+                    .colorScheme
+                    .outlineVariant
+                    .withValues(alpha: 0.3),
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.grid_view,
-                  color: _currentView == ViewType.grid
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.onSurface,
+            ),
+            padding: const EdgeInsets.all(2),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    setState(() {
+                      _currentView = ViewType.list;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: _currentView == ViewType.list
+                          ? Theme.of(context).colorScheme.surface
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: _currentView == ViewType.list
+                          ? [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              )
+                            ]
+                          : null,
+                    ),
+                    child: Icon(
+                      Icons.list_alt,
+                      size: 20,
+                      color: _currentView == ViewType.list
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.6),
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  setState(() {
-                    _currentView = ViewType.grid;
-                  });
-                },
-              ),
-            ],
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    setState(() {
+                      _currentView = ViewType.grid;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: _currentView == ViewType.grid
+                          ? Theme.of(context).colorScheme.surface
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: _currentView == ViewType.grid
+                          ? [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              )
+                            ]
+                          : null,
+                    ),
+                    child: Icon(
+                      Icons.grid_view,
+                      size: 20,
+                      color: _currentView == ViewType.grid
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.6),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

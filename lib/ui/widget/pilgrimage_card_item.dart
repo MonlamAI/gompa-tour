@@ -25,6 +25,7 @@ class PilgrimageCardItem extends ConsumerWidget {
           context.push(PilgrimageDetailScreen.routeName);
         },
         child: Card(
+          margin: EdgeInsets.zero,
           shadowColor: Theme.of(context).colorScheme.shadow,
           color: Theme.of(context).colorScheme.surfaceContainer,
           child: Column(
@@ -128,7 +129,7 @@ class PilgrimageCardItem extends ConsumerWidget {
           shadowColor: Theme.of(context).colorScheme.shadow,
           color: Theme.of(context).colorScheme.surfaceContainer,
           margin:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 0),
+              const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 0),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
