@@ -5,7 +5,6 @@ import 'package:gompa_tour/states/gonpa_state.dart';
 import 'package:gompa_tour/ui/widget/gonpa_app_bar.dart';
 import 'package:gompa_tour/ui/widget/gonpa_cache_image.dart';
 import 'package:gompa_tour/ui/widget/location_card.dart';
-import 'package:gompa_tour/util/translation_helper.dart';
 
 import '../../config/constant.dart';
 import '../widget/address_card.dart';
@@ -20,7 +19,8 @@ class OrganizationDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedGonpa = ref.watch(selectedGonpaProvider);
     Locale locale = Localizations.localeOf(context);
-    String langBase = locale.languageCode == "bo" ? "bod" : "en";
+    String langBase =
+        locale.languageCode == "bo" ? "bod" : locale.languageCode;
 
     if (selectedGonpa == null) {
       return const Scaffold(
@@ -40,15 +40,9 @@ class OrganizationDetailScreen extends ConsumerWidget {
             children: [
               Center(
                 child: Text(
-                  context.localizedText(
-                    enText: TranslationHelper.getTranslatedField(
-                        translations: selectedGonpa.translations,
-                        languageCode: "en",
-                        fieldGetter: (t) => t.name),
-                    boText: TranslationHelper.getTranslatedField(
-                        translations: selectedGonpa.translations,
-                        languageCode: "bo",
-                        fieldGetter: (t) => t.name),
+                  context.localizedField(
+                    translations: selectedGonpa.translations,
+                    getter: (t) => t.name,
                   ),
                   style: TextStyle(
                     fontSize: 24,
@@ -69,37 +63,22 @@ class OrganizationDetailScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               SpeakerWidget(
-                audioUrl: context.localizedText(
-                    enText: TranslationHelper.getTranslatedField(
-                        translations: selectedGonpa.translations,
-                        languageCode: "en",
-                        fieldGetter: (t) => t.descriptionAudio),
-                    boText: TranslationHelper.getTranslatedField(
-                        translations: selectedGonpa.translations,
-                        languageCode: "bo",
-                        fieldGetter: (t) => t.descriptionAudio)),
-                description: context.localizedText(
-                    enText: TranslationHelper.getTranslatedField(
-                        translations: selectedGonpa.translations,
-                        languageCode: "en",
-                        fieldGetter: (t) => t.description),
-                    boText: TranslationHelper.getTranslatedField(
-                        translations: selectedGonpa.translations,
-                        languageCode: "bo",
-                        fieldGetter: (t) => t.description)),
+                audioUrl: context.localizedField(
+                  translations: selectedGonpa.translations,
+                  getter: (t) => t.descriptionAudio,
+                ),
+                description: context.localizedField(
+                  translations: selectedGonpa.translations,
+                  getter: (t) => t.description,
+                ),
                 data: selectedGonpa,
               ),
               const SizedBox(height: 16),
               Text(
-                context.localizedText(
-                    enText: TranslationHelper.getTranslatedField(
-                        translations: selectedGonpa.translations,
-                        languageCode: "en",
-                        fieldGetter: (t) => t.description),
-                    boText: TranslationHelper.getTranslatedField(
-                        translations: selectedGonpa.translations,
-                        languageCode: "bo",
-                        fieldGetter: (t) => t.description)),
+                context.localizedField(
+                  translations: selectedGonpa.translations,
+                  getter: (t) => t.description,
+                ),
                 style: TextStyle(
                   fontSize: 16,
                   height: context.getLocalizedHeight(),
@@ -107,7 +86,7 @@ class OrganizationDetailScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               AddressCard(
-                contact: selectedGonpa.contact!,
+                contact: selectedGonpa.contact,
                 translations: selectedGonpa.translations,
                 geoLocation: selectedGonpa.geoLocation,
               ),

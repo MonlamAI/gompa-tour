@@ -8,7 +8,6 @@ import 'package:gompa_tour/ui/screen/pilgrimage_detail_screen.dart';
 import 'package:gompa_tour/ui/widget/card_tag.dart';
 import 'package:gompa_tour/ui/widget/gonpa_cache_image.dart';
 import 'package:gompa_tour/helper/localization_helper.dart';
-import 'package:gompa_tour/util/translation_helper.dart';
 
 class PilgrimageCardItem extends ConsumerWidget {
   final PilgrimSite pilgrimSite;
@@ -49,17 +48,9 @@ class PilgrimageCardItem extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      context.localizedText(
-                        enText: TranslationHelper.getTranslatedField(
-                          translations: pilgrimSite.translations,
-                          languageCode: "en",
-                          fieldGetter: (t) => t.name,
-                        ),
-                        boText: TranslationHelper.getTranslatedField(
-                          translations: pilgrimSite.translations,
-                          languageCode: 'bo',
-                          fieldGetter: (t) => t.name,
-                        ),
+                      context.localizedField(
+                        translations: pilgrimSite.translations,
+                        getter: (t) => t.name,
                       ),
                       style: TextStyle(
                         fontSize: 16,
@@ -70,17 +61,9 @@ class PilgrimageCardItem extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      context.localizedText(
-                        enText: TranslationHelper.getTranslatedField(
-                          translations: pilgrimSite.translations,
-                          languageCode: "en",
-                          fieldGetter: (t) => t.description,
-                        ),
-                        boText: TranslationHelper.getTranslatedField(
-                          translations: pilgrimSite.translations,
-                          languageCode: 'bo',
-                          fieldGetter: (t) => t.description,
-                        ),
+                      context.localizedField(
+                        translations: pilgrimSite.translations,
+                        getter: (t) => t.description,
                         maxLength: kDescriptionMaxLength,
                       ),
                       style: TextStyle(
@@ -91,27 +74,37 @@ class PilgrimageCardItem extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        Tag(
-                          text: pilgrimSite.contact!.translations[0].state,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondaryContainer,
-                          textColor: Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer,
-                        ),
-                        Tag(
-                          text: pilgrimSite.contact!.translations[0].country,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.tertiaryContainer,
-                          textColor:
-                              Theme.of(context).colorScheme.onTertiaryContainer,
-                        ),
-                      ],
-                    ),
+                    if (pilgrimSite.contact != null &&
+                        pilgrimSite.contact!.translations.isNotEmpty)
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          Tag(
+                            text: context.localizedField(
+                              translations:
+                                  pilgrimSite.contact!.translations,
+                              getter: (t) => t.state,
+                            ),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondaryContainer,
+                            textColor: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                          ),
+                          Tag(
+                            text: context.localizedField(
+                              translations:
+                                  pilgrimSite.contact!.translations,
+                              getter: (t) => t.country,
+                            ),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.tertiaryContainer,
+                            textColor:
+                                Theme.of(context).colorScheme.onTertiaryContainer,
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
@@ -129,24 +122,16 @@ class PilgrimageCardItem extends ConsumerWidget {
           shadowColor: Theme.of(context).colorScheme.shadow,
           color: Theme.of(context).colorScheme.surfaceContainer,
           margin:
-              const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 0),
+              const EdgeInsets.only(left: 16, right: 16, bottom: 12),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  context.localizedText(
-                    enText: TranslationHelper.getTranslatedField(
-                      translations: pilgrimSite.translations,
-                      languageCode: "en",
-                      fieldGetter: (t) => t.name,
-                    ),
-                    boText: TranslationHelper.getTranslatedField(
-                      translations: pilgrimSite.translations,
-                      languageCode: 'bo',
-                      fieldGetter: (t) => t.name,
-                    ),
+                  context.localizedField(
+                    translations: pilgrimSite.translations,
+                    getter: (t) => t.name,
                   ),
                   style: TextStyle(
                     fontSize: 18,
@@ -175,17 +160,9 @@ class PilgrimageCardItem extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            context.localizedText(
-                              enText: TranslationHelper.getTranslatedField(
-                                translations: pilgrimSite.translations,
-                                languageCode: "en",
-                                fieldGetter: (t) => t.description,
-                              ),
-                              boText: TranslationHelper.getTranslatedField(
-                                translations: pilgrimSite.translations,
-                                languageCode: 'bo',
-                                fieldGetter: (t) => t.description,
-                              ),
+                            context.localizedField(
+                              translations: pilgrimSite.translations,
+                              getter: (t) => t.description,
                               maxLength: kDescriptionMaxLength,
                             ),
                             style: TextStyle(
@@ -194,56 +171,40 @@ class PilgrimageCardItem extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              Tag(
-                                text: context.localizedText(
-                                  enText: TranslationHelper.getTranslatedField(
+                          if (pilgrimSite.contact != null &&
+                              pilgrimSite.contact!.translations.isNotEmpty)
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                Tag(
+                                  text: context.localizedField(
                                     translations:
                                         pilgrimSite.contact!.translations,
-                                    languageCode: "en",
-                                    fieldGetter: (t) => t.state,
+                                    getter: (t) => t.state,
                                   ),
-                                  boText: TranslationHelper.getTranslatedField(
-                                    translations:
-                                        pilgrimSite.contact!.translations,
-                                    languageCode: 'bo',
-                                    fieldGetter: (t) => t.state,
-                                  ),
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer,
+                                  textColor: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondaryContainer,
                                 ),
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer,
-                                textColor: Theme.of(context)
-                                    .colorScheme
-                                    .onSecondaryContainer,
-                              ),
-                              Tag(
-                                text: context.localizedText(
-                                  enText: TranslationHelper.getTranslatedField(
+                                Tag(
+                                  text: context.localizedField(
                                     translations:
                                         pilgrimSite.contact!.translations,
-                                    languageCode: "en",
-                                    fieldGetter: (t) => t.country,
+                                    getter: (t) => t.country,
                                   ),
-                                  boText: TranslationHelper.getTranslatedField(
-                                    translations:
-                                        pilgrimSite.contact!.translations,
-                                    languageCode: 'bo',
-                                    fieldGetter: (t) => t.country,
-                                  ),
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .tertiaryContainer,
+                                  textColor: Theme.of(context)
+                                      .colorScheme
+                                      .onTertiaryContainer,
                                 ),
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .tertiaryContainer,
-                                textColor: Theme.of(context)
-                                    .colorScheme
-                                    .onTertiaryContainer,
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
                         ],
                       ),
                     ),

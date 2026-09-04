@@ -100,9 +100,9 @@ class _DeitiesListScreenState extends ConsumerState<DeitiesListScreen> {
                               : GridView.builder(
                                   physics: const BouncingScrollPhysics(),
                                   padding: const EdgeInsets.only(
-                                    left: 12,
-                                    right: 12,
-                                    top: 4,
+                                    left: 16,
+                                    right: 16,
+                                    top: 0,
                                     bottom: 100,
                                   ),
                                   gridDelegate:
@@ -247,7 +247,7 @@ class _DeitiesListScreenState extends ConsumerState<DeitiesListScreen> {
   Widget _buildSearchBar(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: 28,
+        horizontal: 16,
         vertical: 16,
       ),
       child: SearchBar(

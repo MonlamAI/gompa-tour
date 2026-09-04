@@ -128,9 +128,9 @@ class _OrganizationListScreenState
                               )
                             : GridView.builder(
                                 padding: const EdgeInsets.only(
-                                  left: 12,
-                                  right: 12,
-                                  top: 4,
+                                  left: 16,
+                                  right: 16,
+                                  top: 0,
                                   bottom: 100,
                                 ),
                                 gridDelegate:
@@ -166,7 +166,7 @@ class _OrganizationListScreenState
   Widget _buildSearchBar(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: 28,
+        horizontal: 16,
         vertical: 16,
       ),
       child: SearchBar(
@@ -204,30 +204,31 @@ class _OrganizationListScreenState
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Grouped Container for gonpa types and states filters
-          Container(
-            height: 36,
-            decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHighest
-                  .withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
+          Expanded(
+            child: Container(
+              height: 36,
+              decoration: BoxDecoration(
                 color: Theme.of(context)
                     .colorScheme
-                    .outlineVariant
-                    .withValues(alpha: 0.3),
+                    .surfaceContainerHighest
+                    .withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outlineVariant
+                      .withValues(alpha: 0.3),
+                ),
               ),
-            ),
-            padding: const EdgeInsets.all(2),
-            child: DropdownButtonHideUnderline(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  DropdownButton2<String>(
-                    isExpanded: true,
-                    underline: const SizedBox(),
-                    value: _selectedType,
+              padding: const EdgeInsets.all(2),
+              child: DropdownButtonHideUnderline(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        underline: const SizedBox(),
+                        value: _selectedType,
                     hint: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -331,8 +332,7 @@ class _OrganizationListScreenState
                     },
                     buttonStyleData: ButtonStyleData(
                       height: 36,
-                      width: 125,
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         color: _selectedType != null
@@ -381,6 +381,7 @@ class _OrganizationListScreenState
                                   .onSurface
                                   .withValues(alpha: 0.7),
                             ),
+                      ),
                     ),
                   ),
                   Container(
@@ -393,10 +394,11 @@ class _OrganizationListScreenState
                         .withValues(alpha: 0.4),
                   ),
                   // dropdown for unique states
-                  DropdownButton2<String>(
-                    isExpanded: true,
-                    underline: const SizedBox(),
-                    value: _selectedState?.toUpperCase(),
+                  Expanded(
+                    child: DropdownButton2<String>(
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      value: _selectedState?.toUpperCase(),
                     hint: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -510,8 +512,7 @@ class _OrganizationListScreenState
                     },
                     buttonStyleData: ButtonStyleData(
                       height: 36,
-                      width: 125,
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         color: _selectedState != null
@@ -560,12 +561,15 @@ class _OrganizationListScreenState
                                   .onSurface
                                   .withValues(alpha: 0.7),
                             ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
+          ),
+          const SizedBox(width: 8),
           Container(
             height: 36,
             decoration: BoxDecoration(

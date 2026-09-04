@@ -123,7 +123,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: 28,
+        horizontal: 16,
         vertical: locale.languageCode == 'bo' ? 6 : 10,
       ),
       child: Column(
@@ -158,7 +158,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildSearchBar(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: 28,
+        horizontal: 16,
         vertical: 12,
       ),
       child: SearchBar(
