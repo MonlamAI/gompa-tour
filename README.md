@@ -1,6 +1,6 @@
-# GonpaTour
+# Neykor (གནས་སྐོར། / नेकोर)
 
-GonpaTour is a mobile application built with Flutter that allows users to view, search, and scan for information about various Pilgrimage and organizations, displaying details that include audio, images, and text. This document provides an overview of the project's structure, setup instructions, key libraries used, and other technical details.
+Neykor (GonpaTour) is a mobile application built with Flutter that allows users to view, search, and scan for information about Buddhist monasteries, sacred statues/deities, pilgrimage sites, and religious festivals. Developed under the executive organ of the **Department of Religion and Culture (ཆོས་རིག་ལས་ཁུངས། / धर्म एवं संस्कृति विभाग)**, Central Tibetan Administration (CTA), it displays rich multimedia content including descriptive text, audio recordings, images, and geolocation maps.
 
 ---
 
@@ -12,15 +12,19 @@ GonpaTour is a mobile application built with Flutter that allows users to view, 
 4. [Project Structure](#project-structure)
 5. [Libraries Used](#libraries-used)
 6. [Installation and Setup](#installation-and-setup)
-7. [Usage](#usage)
-8. [Contributing](#contributing)
-9. [License](#license)
+7. [Environment Configuration](#environment-configuration)
+8. [Usage](#usage)
+9. [Supported Languages](#supported-languages)
+10. [Contributing](#contributing)
+11. [License](#license)
 
 ---
 
 ## Project Overview
 
-GonpaTour enables users to discover and explore various monasteries and organizations, presenting rich multimedia content such as text descriptions, audio recordings, and images. Users can search, view, or scan for specific information, making it a valuable tool for learning and exploration.
+**Neykor** enables pilgrims, travelers, researchers, and Buddhist communities to discover and explore sacred Buddhist monasteries, statues, pilgrimage sites, and festivals across India, Nepal, and Bhutan. Presenting rich multimedia content such as historical descriptions, audio recordings, photo galleries, and map navigation, it serves as a modern digital tool for preserving and promoting Tibetan religious and cultural heritage.
+
+---
 
 ## Demo
 
@@ -34,34 +38,44 @@ GonpaTour enables users to discover and explore various monasteries and organiza
     <td><img src="https://github.com/OpenPecha/gompa-tour/blob/develop/demo/3.png?raw=true" alt="Screenshot 4" width="240"></td>
     <td><img src="https://github.com/OpenPecha/gompa-tour/blob/develop/demo/4.png?raw=true" alt="Screenshot 5" width="240"></td>
     <td><img src="https://github.com/OpenPecha/gompa-tour/blob/develop/demo/5.png?raw=true" alt="Screenshot 6" width="240"></td>
-  
-</tr>
+  </tr>
 </table>
 
 ---
 
 ## Features
 
-- **View Details**: Provides a comprehensive view of each monastery or organization, including descriptive text, images, and audio.
-- **Search Functionality**: Allows users to search for specific monasteries or organizations.
-- **Scan and Retrieve**: Enables scanning (QR/Barcode functionality) for quick access to specific details.
-- **Multimedia Support**: Displays text, images, and plays audio for a richer experience.
+- **Four Core Categories**:
+  - **Deities & Statues (རྟེན་བཤད།)**: Comprehensive background and spiritual iconography of sacred statues.
+  - **Monasteries / Gonpas (ཆོས་སྡེ།)**: Detailed profiles of 250+ monasteries across all Tibetan Buddhist schools.
+  - **Pilgrimage Sites (གནས་བཤད།)**: Sacred Buddhist pilgrimage destinations with histories and locations.
+  - **Festivals (དུས་ཆེན།)**: Religious festivals, dates, rituals, and celebration schedules.
+- **Interactive OpenStreetMap**: View nearby monasteries and pilgrimage sites with real-time GPS location and distance calculations.
+- **QR Code Scanner**: Scan QR codes on-site at monasteries and statues for instant access to historical information.
+- **Universal Multi-Language Search**: Fast real-time search across all categories matching queries in Tibetan, English, and Hindi.
+- **Multimedia Support**: Photo galleries, audio streaming, and built-in Text-to-Speech (TTS) narration.
+- **Multilingual UI**: Native script rendering and localized interfaces in Tibetan (བོད་ཡིག), English (EN), and Hindi (हिन्दी).
+- **Dark Mode & Theming**: Full support for Light, Dark, and System appearance themes.
 
 ---
 
 ## Project Structure
 
-The project follows a modular folder structure to keep the code organized and maintainable.
+The project follows a clean, modular folder structure:
 
 ```plaintext
 lib/
-├── config            # Configuration files (constants, themes, etc.)
-├── l10n              # Localization files for multi-language support
-├── models            # Data models for representing app data
-├── states            # State management using Riverpod
-└── UI                # User Interface components
-    ├── screens       # Full-screen views for different app screens
-    └── widgets       # Reusable UI widgets used across the app
+├── config/              # App routing (GoRouter), themes, styles, and constants
+├── helper/              # Localization helpers and SQLite database helpers
+├── l10n/                # Localization files (app_bo.arb, app_en.arb, app_hi.arb)
+│   └── generated/       # Generated localization classes
+├── models/              # Data models (Gonpa, Statue, Festival, PilgrimSite)
+├── repo/                # API and SQLite database repositories
+├── states/              # State management providers using Riverpod
+├── ui/
+│   ├── screen/          # Full-screen views (Home, Map, QR, Search, Settings, Detail screens)
+│   └── widget/          # Reusable UI widgets (Cards, AudioPlayer, ImageCache, AppBar)
+└── util/                # Debouncers, QR extractors, translation helpers
 ```
 
 ---
@@ -70,10 +84,15 @@ lib/
 
 The following major libraries are used in the project:
 
-- **[Riverpod](https://pub.dev/packages/riverpod)**: Used for state management. Riverpod is selected for its flexibility, efficiency, and better support for asynchronous operations.
-- **[Dio](https://pub.dev/packages/dio)**: A powerful HTTP client for making network requests to fetch data from APIs.
-- **[GoRouter](https://pub.dev/packages/go_router)**: Provides routing management for navigation between screens, including support for deep linking.
-- **[Sqflite](https://pub.dev/packages/sqflite)**: A database library for local data storage, used to store and retrieve scanned information or cached data.
+- **[Riverpod](https://pub.dev/packages/riverpod)**: Flexible, compile-safe state management for asynchronous data fetching and reactive UI updates.
+- **[GoRouter](https://pub.dev/packages/go_router)**: Declarative routing and deep linking between app screens.
+- **[Sqflite](https://pub.dev/packages/sqflite)**: Local embedded SQLite database for offline storage and caching.
+- **[http](https://pub.dev/packages/http)**: Network client for fetching data and media from REST APIs.
+- **[flutter_map](https://pub.dev/packages/flutter_map)** & **[latlong2](https://pub.dev/packages/latlong2)**: High-performance OpenStreetMap rendering and geospatial calculations.
+- **[mobile_scanner](https://pub.dev/packages/mobile_scanner)** & **[qr_flutter](https://pub.dev/packages/qr_flutter)**: Fast QR code scanning and QR generation.
+- **[audioplayers](https://pub.dev/packages/audioplayers)** & **[flutter_tts](https://pub.dev/packages/flutter_tts)**: Audio playback for sacred recordings and Text-to-Speech narration.
+- **[flutter_dotenv](https://pub.dev/packages/flutter_dotenv)**: Loading environment configuration variables from `.env`.
+- **[geolocator](https://pub.dev/packages/geolocator)**: Device location services and GPS positioning.
 
 ---
 
@@ -82,126 +101,86 @@ The following major libraries are used in the project:
 To set up the project locally, follow these steps:
 
 1. **Clone the repository**:
-
    ```bash
    git clone https://github.com/OpenPecha/gompa-tour.git
    cd gompa-tour
    ```
 
 2. **Install dependencies**:
-
-   Ensure Flutter is installed on your system, then run:
-
+   Ensure Flutter (or [FVM](https://fvm.app/)) is installed, then run:
    ```bash
+   fvm flutter pub get
+   # or
    flutter pub get
    ```
 
-3. **Set up configurations**:
+3. **Set up environment configurations**:
+   Create a `.env` file in the project root (see [Environment Configuration](#environment-configuration)).
 
-   Add any necessary API keys or configuration files in the `lib/config` folder.
-
-4. **Run the app**:
-
-   Start the app on a connected device or emulator:
-
+4. **Generate localizations**:
    ```bash
-   flutter run
+   fvm flutter gen-l10n
    ```
+
+5. **Run the app**:
+   ```bash
+   fvm flutter run
+   ```
+
+---
+
+## Environment Configuration
+
+Create a `.env` file in the root directory:
+
+```env
+BASE_URL=https://api.neykor.net
+IMAGE_BASE_URL=https://s3.ap-south-1.amazonaws.com/gompa.tour
+```
 
 ---
 
 ## Usage
 
-Once the app is installed and running, users can:
-Five Tabs
-1. **Home**
-2. **Map**
-3. **Scan**
-4. **Search**
-5. **Settings**
+The application is structured into five primary navigation tabs:
 
 ### 1. Home
-This section contains three main menus with detailed subcategories.
-
-- **Pilgrimage**
-  - **Popular Sites**
-    - Top-rated pilgrimage sites
-    - Historical significance
-
-- **Organization**
-  - **Monasteries**
-    - List of registered monasteries
-    - Affiliated organizations
-  - **NGOs**
-    - NGOs related to Tibetan culture
-    - Contact information & donation options
-  - **Community Centers**
-    - Centers for Tibetan communities
-
-- **Festival**
-  - **Upcoming Festivals**
-    - Dates and locations
-    - Detailed event programs
-  - **Local Celebrations**
-    - Regional festival info
-    - Cultural significance
-
----
+- **Deities (Statues)**: Browse sacred statues and deities with detailed iconography and spiritual significance.
+- **Organizations (Monasteries)**:
+  - Browse monasteries categorized by Tibetan Buddhist tradition (*Nyingma, Kagyu, Sakya, Gelug, Bon, Jonang, Remey, Shalu, Bodong, Others*).
+  - Filter monasteries by State and Region across India, Nepal, and Bhutan.
+- **Pilgrimage**: Explore holy pilgrimage destinations with historical context.
+- **Festivals**: View upcoming religious festivals and ceremonial programs.
 
 ### 2. Map
-The map feature allows locating key spots with additional subcategories for enhanced navigation.
-
-- **Locate Pilgrimage Sites**
-  - Detailed map with pilgrimage site markers
-  - Directions and distance from current location
-
-- **Locate Organizations**
-  - Map view of organizations and monasteries
-  - Filters by type (Monasteries, NGOs, etc.)
-
----
+- Interactive map view displaying markers for monasteries and pilgrimage sites.
+- Geolocation pinpointing your current position and distance to nearby sacred sites.
+- Tap any marker to view quick details or open full directions in Google Maps.
 
 ### 3. Scan
-The scan feature enables quick access to information through QR or barcodes.
-
-- **QR Code**
-  - Directs to detailed site information
-
-- **Barcode**
-  - Access to organization profiles
-  - Quick access to festival events
-
----
+- Fast QR code scanner for scanning Neykor QR codes placed at monasteries and statues.
+- Instantly opens the corresponding detail screen with audio, images, and history.
 
 ### 4. Search
-This feature helps users find specific monasteries or organizations by name.
+- Universal search across statues, monasteries, pilgrimage sites, and festivals.
+- Searches in Tibetan, English, and Hindi simultaneously.
+- Recent search chips for quick re-searching.
 
-- **Search by Name**
-  - Autocomplete suggestions
-  - Top results for relevant monasteries or organizations
-
-- **Filter by Type**
-  - Filter results by Monastery, NGO, Community Center, etc.
-  - Location-based filtering (nearby or region-specific)
+### 5. Settings
+- **Theme**: Switch between Light, Dark, and System appearance.
+- **Language**: Switch app language between **Tibetan (བོད་ཡིག)**, **English (EN)**, and **Hindi (हिन्दी)**.
+- **About Us**: Information about the Department of Religion and Culture (CTA).
+- **About App**: Background on the Neykor application and its preservation mission.
+- **Tibetan Prayer App**: Link to the official digital prayer app.
+- **Share App**: Share the app store download link.
 
 ---
 
-### 5. Setting
-App settings allow for customizing the app experience.
+## Supported Languages
 
-- **Theme**
-  - Light, Dark, and System themes
-  - Custom color options
-
-- **Language**
-  - Select app language (e.g., Tibetan, English)
-
-- **Notifications**
-  - Enable/disable notifications
-
-- **Help & Support**
-  - FAQs
-  - Contact support team
+- བོད་ཡིག (**Tibetan**) - Default language on first launch
+- **English** (EN)
+- हिन्दी (**Hindi**)
 
 ---
 
