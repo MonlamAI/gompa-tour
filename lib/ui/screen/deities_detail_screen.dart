@@ -6,7 +6,6 @@ import 'package:gompa_tour/states/statue_state.dart';
 import 'package:gompa_tour/ui/widget/gonap_qr_card.dart';
 import 'package:gompa_tour/ui/widget/gonpa_app_bar.dart';
 import 'package:gompa_tour/ui/widget/gonpa_cache_image.dart';
-import 'package:gompa_tour/util/translation_helper.dart';
 
 import '../widget/speaker_widget.dart';
 
@@ -18,7 +17,8 @@ class DeityDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedStatue = ref.watch(selectedStatueProvider);
     Locale locale = Localizations.localeOf(context);
-    String langBase = locale.languageCode == "bo" ? "bod" : "en";
+    String langBase =
+        locale.languageCode == "bo" ? "bod" : locale.languageCode;
 
     if (selectedStatue == null) {
       return const Scaffold(
@@ -39,15 +39,9 @@ class DeityDetailScreen extends ConsumerWidget {
             children: [
               Center(
                 child: Text(
-                  context.localizedText(
-                    enText: TranslationHelper.getTranslatedField(
-                        translations: selectedStatue.translations,
-                        languageCode: "en",
-                        fieldGetter: (t) => t.name),
-                    boText: TranslationHelper.getTranslatedField(
-                        translations: selectedStatue.translations,
-                        languageCode: "bo",
-                        fieldGetter: (t) => t.name),
+                  context.localizedField(
+                    translations: selectedStatue.translations,
+                    getter: (t) => t.name,
                   ),
                   style: TextStyle(
                     fontSize: 24,
@@ -68,37 +62,21 @@ class DeityDetailScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               SpeakerWidget(
-                audioUrl: context.localizedText(
-                    enText: TranslationHelper.getTranslatedField(
-                        translations: selectedStatue.translations,
-                        languageCode: "en",
-                        fieldGetter: (t) => t.descriptionAudio),
-                    boText: TranslationHelper.getTranslatedField(
-                        translations: selectedStatue.translations,
-                        languageCode: "bo",
-                        fieldGetter: (t) => t.descriptionAudio)),
-                description: context.localizedText(
-                    enText: TranslationHelper.getTranslatedField(
-                        translations: selectedStatue.translations,
-                        languageCode: "en",
-                        fieldGetter: (t) => t.description),
-                    boText: TranslationHelper.getTranslatedField(
-                        translations: selectedStatue.translations,
-                        languageCode: "bo",
-                        fieldGetter: (t) => t.description)),
+                audioUrl: context.localizedField(
+                  translations: selectedStatue.translations,
+                  getter: (t) => t.descriptionAudio,
+                ),
+                description: context.localizedField(
+                  translations: selectedStatue.translations,
+                  getter: (t) => t.description,
+                ),
                 data: selectedStatue,
               ),
               const SizedBox(height: 16),
               Text(
-                context.localizedText(
-                  enText: TranslationHelper.getTranslatedField(
-                      translations: selectedStatue.translations,
-                      languageCode: "en",
-                      fieldGetter: (t) => t.description),
-                  boText: TranslationHelper.getTranslatedField(
-                      translations: selectedStatue.translations,
-                      languageCode: "bo",
-                      fieldGetter: (t) => t.description),
+                context.localizedField(
+                  translations: selectedStatue.translations,
+                  getter: (t) => t.description,
                 ),
                 style: TextStyle(
                   fontSize: 16,
@@ -107,7 +85,7 @@ class DeityDetailScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               GonpaQRCard(
-                qrData:"$kBaseUrl/$langBase/Statue/${selectedStatue.id}",
+                qrData: "$kBaseUrl/$langBase/Statue/${selectedStatue.id}",
               ),
               const SizedBox(height: 16),
             ],

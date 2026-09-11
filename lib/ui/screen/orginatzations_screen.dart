@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gompa_tour/helper/localization_helper.dart';
 import 'package:gompa_tour/models/gonpa.dart';
 import 'package:gompa_tour/states/gonpa_state.dart';
 import 'package:gompa_tour/states/recent_search.dart';
@@ -144,6 +145,7 @@ class _OrginatzationsScreenState extends ConsumerState<OrginatzationsScreen> {
   Widget _buildSectListCard(BuildContext context) {
     return Expanded(
       child: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 100),
         physics: const BouncingScrollPhysics(),
         itemCount: groupedGonpas.length,
         itemBuilder: (context, index) {
@@ -165,7 +167,7 @@ class _OrginatzationsScreenState extends ConsumerState<OrginatzationsScreen> {
               shadowColor: Theme.of(context).colorScheme.shadow,
               color: Theme.of(context).colorScheme.surfaceContainer,
               margin: const EdgeInsets.only(
-                  left: 16, right: 16, top: 16, bottom: 0),
+                  left: 16, right: 16, bottom: 12),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -176,31 +178,35 @@ class _OrginatzationsScreenState extends ConsumerState<OrginatzationsScreen> {
                       borderRadius: BorderRadius.circular(8),
                       child: GonpaCacheImage(
                         url: getSectImage(sect),
-                        height: 100,
-                        width: 100,
+                        height: 90,
+                        width: 90,
                         fit: BoxFit.cover,
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                      ),
+                    const SizedBox(width: 14),
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             _getTitle(sect.toString(), context),
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: Localizations.localeOf(context)
+                                          .languageCode ==
+                                      'bo'
+                                  ? 18
+                                  : 20,
                               fontWeight: FontWeight.bold,
+                              height: context.getLocalizedHeight(),
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 6),
                           Text(
                             gonpas.length.toString(),
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 15,
                               color: Colors.grey.shade600,
                             ),
                           ),
@@ -221,6 +227,7 @@ class _OrginatzationsScreenState extends ConsumerState<OrginatzationsScreen> {
       BuildContext context, GonpaListState gonpaState) {
     return Expanded(
       child: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 100),
         physics: const BouncingScrollPhysics(),
         itemCount: gonpaState.gonpas.length,
         itemBuilder: (context, index) {
@@ -259,7 +266,7 @@ class _OrginatzationsScreenState extends ConsumerState<OrginatzationsScreen> {
   Widget _buildSearchBar(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: 28,
+        horizontal: 16,
         vertical: 16,
       ),
       child: SearchBar(

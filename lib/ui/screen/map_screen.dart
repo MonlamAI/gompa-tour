@@ -10,7 +10,6 @@ import 'package:gompa_tour/states/gonpa_state.dart';
 import 'package:gompa_tour/ui/screen/organization_detail_screen.dart';
 import 'package:gompa_tour/ui/widget/country_marker.dart';
 import 'package:gompa_tour/ui/widget/gonpa_cache_image.dart';
-import 'package:gompa_tour/util/translation_helper.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../config/constant.dart';
@@ -204,15 +203,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    context.localizedText(
-                      enText: TranslationHelper.getTranslatedField(
-                          translations: selectedGonpa.translations,
-                          languageCode: "en",
-                          fieldGetter: (t) => t.name),
-                      boText: TranslationHelper.getTranslatedField(
-                          translations: selectedGonpa.translations,
-                          languageCode: "bo",
-                          fieldGetter: (t) => t.name),
+                    context.localizedField(
+                      translations: selectedGonpa.translations,
+                      getter: (t) => t.name,
                     ),
                     style: TextStyle(
                       fontSize: 18,
@@ -222,20 +215,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                      context.localizedText(
-                        enText: TranslationHelper.getTranslatedField(
-                            translations: selectedGonpa.translations,
-                            languageCode: "en",
-                            fieldGetter: (t) => t.description),
-                        boText: TranslationHelper.getTranslatedField(
-                            translations: selectedGonpa.translations,
-                            languageCode: "bo",
-                            fieldGetter: (t) => t.description),
-                        maxLength: kDescriptionMaxLength,
-                      ),
-                      style: TextStyle(
-                        height: context.getLocalizedHeight(),
-                      )),
+                    context.localizedField(
+                      translations: selectedGonpa.translations,
+                      getter: (t) => t.description,
+                      maxLength: kDescriptionMaxLength,
+                    ),
+                    style: TextStyle(
+                      height: context.getLocalizedHeight(),
+                    ),
+                  ),
                   const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

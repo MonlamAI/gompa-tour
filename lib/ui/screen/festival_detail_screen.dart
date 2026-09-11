@@ -16,7 +16,8 @@ class FestivalDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedFestival = ref.watch(selectedFestivalProvider);
     Locale locale = Localizations.localeOf(context);
-    String langBase = locale.languageCode == "bo" ? "bod" : "en";
+    String langBase =
+        locale.languageCode == "bo" ? "bod" : locale.languageCode;
 
     if (selectedFestival == null) {
       return const Scaffold(
@@ -37,9 +38,9 @@ class FestivalDetailScreen extends ConsumerWidget {
             children: [
               Center(
                 child: Text(
-                  context.localizedText(
-                    enText: selectedFestival.translations[1].name,
-                    boText: selectedFestival.translations[0].name,
+                  context.localizedField(
+                    translations: selectedFestival.translations,
+                    getter: (t) => t.name,
                   ),
                   style: TextStyle(
                     fontSize: 24,
@@ -60,9 +61,9 @@ class FestivalDetailScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                context.localizedText(
-                  enText: selectedFestival.translations[1].description,
-                  boText: selectedFestival.translations[0].description,
+                context.localizedField(
+                  translations: selectedFestival.translations,
+                  getter: (t) => t.description,
                 ),
                 style: TextStyle(
                   fontSize: 16,

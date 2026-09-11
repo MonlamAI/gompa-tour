@@ -13,6 +13,7 @@ class ListScreen extends StatelessWidget {
     return Scaffold(
       appBar: GonpaAppBar(title: AppLocalizations.of(context)!.festival),
       body: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 100),
         itemCount: items.length,
         itemBuilder: (context, index) {
           return GestureDetector(

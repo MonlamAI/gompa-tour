@@ -25,6 +25,7 @@ class FestivalCardItem extends ConsumerWidget {
           context.push(FestivalDetailScreen.routeName);
         },
         child: Card(
+          margin: EdgeInsets.zero,
           shadowColor: Theme.of(context).colorScheme.shadow,
           color: Theme.of(context).colorScheme.surfaceContainer,
           child: Column(
@@ -48,9 +49,9 @@ class FestivalCardItem extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      context.localizedText(
-                        enText: festival.translations[1].name,
-                        boText: festival.translations[0].name,
+                      context.localizedField(
+                        translations: festival.translations,
+                        getter: (t) => t.name,
                       ),
                       style: TextStyle(
                         fontSize: 16,
@@ -61,9 +62,9 @@ class FestivalCardItem extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      context.localizedText(
-                        enText: festival.translations[1].description,
-                        boText: festival.translations[0].description,
+                      context.localizedField(
+                        translations: festival.translations,
+                        getter: (t) => t.description,
                         maxLength: kDescriptionMaxLength,
                       ),
                       style: TextStyle(
@@ -90,16 +91,16 @@ class FestivalCardItem extends ConsumerWidget {
           shadowColor: Theme.of(context).colorScheme.shadow,
           color: Theme.of(context).colorScheme.surfaceContainer,
           margin:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 0),
+              const EdgeInsets.only(left: 16, right: 16, bottom: 12),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  context.localizedText(
-                    enText: festival.translations[1].name,
-                    boText: festival.translations[0].name,
+                  context.localizedField(
+                    translations: festival.translations,
+                    getter: (t) => t.name,
                   ),
                   style: TextStyle(
                     fontSize: 18,
@@ -125,9 +126,9 @@ class FestivalCardItem extends ConsumerWidget {
                     const SizedBox(width: 16),
                     Expanded(
                         child: Text(
-                      context.localizedText(
-                        enText: festival.translations[1].description,
-                        boText: festival.translations[0].description,
+                      context.localizedField(
+                        translations: festival.translations,
+                        getter: (t) => t.description,
                         maxLength: kDescriptionMaxLength,
                       ),
                       style: TextStyle(

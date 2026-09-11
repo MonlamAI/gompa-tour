@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gompa_tour/l10n/generated/app_localizations.dart';
 import 'package:gompa_tour/helper/localization_helper.dart';
 import 'package:gompa_tour/models/contact.dart';
-import 'package:gompa_tour/util/translation_helper.dart';
 
 class AddressCard extends StatelessWidget {
   final List<dynamic> translations;
@@ -46,15 +45,9 @@ class AddressCard extends StatelessWidget {
                 const Divider(height: 24),
                 if (translations.isNotEmpty) ...[
                   Text(
-                    'Name: ${context.localizedText(
-                      enText: TranslationHelper.getTranslatedField(
-                          translations: translations,
-                          languageCode: "en",
-                          fieldGetter: (t) => t.name),
-                      boText: TranslationHelper.getTranslatedField(
-                          translations: translations,
-                          languageCode: "bo",
-                          fieldGetter: (t) => t.name),
+                    'Name: ${context.localizedField(
+                      translations: translations,
+                      getter: (t) => t.name,
                     )}',
                     style: const TextStyle(
                       fontSize: 16,
@@ -63,59 +56,35 @@ class AddressCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                 ],
-                if (contact!.translations.isNotEmpty) ...[
+                if (contact != null && contact!.translations.isNotEmpty) ...[
                   Text(
-                    'Address: ${context.localizedText(
-                      enText: TranslationHelper.getTranslatedField(
-                          translations: contact!.translations,
-                          languageCode: "en",
-                          fieldGetter: (t) => t.address),
-                      boText: TranslationHelper.getTranslatedField(
-                          translations: contact!.translations,
-                          languageCode: "bo",
-                          fieldGetter: (t) => t.address),
+                    'Address: ${context.localizedField(
+                      translations: contact!.translations,
+                      getter: (t) => t.address,
                     )}',
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'State: ${context.localizedText(
-                      enText: TranslationHelper.getTranslatedField(
-                          translations: contact!.translations,
-                          languageCode: "en",
-                          fieldGetter: (t) => t.state),
-                      boText: TranslationHelper.getTranslatedField(
-                          translations: contact!.translations,
-                          languageCode: "bo",
-                          fieldGetter: (t) => t.state),
+                    'State: ${context.localizedField(
+                      translations: contact!.translations,
+                      getter: (t) => t.state,
                     )}',
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Postal Code: ${context.localizedText(
-                      enText: TranslationHelper.getTranslatedField(
-                          translations: contact!.translations,
-                          languageCode: "en",
-                          fieldGetter: (t) => t.postalCode!),
-                      boText: TranslationHelper.getTranslatedField(
-                          translations: contact!.translations,
-                          languageCode: "bo",
-                          fieldGetter: (t) => t.postalCode!),
+                    'Postal Code: ${context.localizedField(
+                      translations: contact!.translations,
+                      getter: (t) => t.postalCode ?? '',
                     )}',
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Country: ${context.localizedText(
-                      enText: TranslationHelper.getTranslatedField(
-                          translations: contact!.translations,
-                          languageCode: "en",
-                          fieldGetter: (t) => t.country),
-                      boText: TranslationHelper.getTranslatedField(
-                          translations: contact!.translations,
-                          languageCode: "bo",
-                          fieldGetter: (t) => t.country),
+                    'Country: ${context.localizedField(
+                      translations: contact!.translations,
+                      getter: (t) => t.country,
                     )}',
                     style: const TextStyle(fontSize: 16),
                   ),

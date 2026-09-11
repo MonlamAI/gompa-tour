@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:gompa_tour/helper/localization_helper.dart';
 import 'package:gompa_tour/models/statue.dart';
 import 'package:gompa_tour/states/statue_state.dart';
-import 'package:gompa_tour/util/translation_helper.dart';
 
 import '../../config/constant.dart';
 import '../screen/deities_detail_screen.dart';
@@ -26,6 +25,7 @@ class DeityCardItem extends ConsumerWidget {
           context.push(DeityDetailScreen.routeName);
         },
         child: Card(
+          margin: EdgeInsets.zero,
           shadowColor: Theme.of(context).colorScheme.shadow,
           color: Theme.of(context).colorScheme.surfaceContainer,
           child: Column(
@@ -49,15 +49,9 @@ class DeityCardItem extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      context.localizedText(
-                        enText: TranslationHelper.getTranslatedField(
-                            translations: statue.translations,
-                            languageCode: "en",
-                            fieldGetter: (t) => t.name),
-                        boText: TranslationHelper.getTranslatedField(
-                            translations: statue.translations,
-                            languageCode: 'bo',
-                            fieldGetter: (t) => t.name),
+                      context.localizedField(
+                        translations: statue.translations,
+                        getter: (t) => t.name,
                       ),
                       style: TextStyle(
                         fontSize: 16,
@@ -68,15 +62,9 @@ class DeityCardItem extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      context.localizedText(
-                        enText: TranslationHelper.getTranslatedField(
-                            translations: statue.translations,
-                            languageCode: "en",
-                            fieldGetter: (t) => t.description),
-                        boText: TranslationHelper.getTranslatedField(
-                            translations: statue.translations,
-                            languageCode: 'bo',
-                            fieldGetter: (t) => t.description),
+                      context.localizedField(
+                        translations: statue.translations,
+                        getter: (t) => t.description,
                         maxLength: kDescriptionMaxLength,
                       ),
                       style: TextStyle(
@@ -103,22 +91,16 @@ class DeityCardItem extends ConsumerWidget {
           shadowColor: Theme.of(context).colorScheme.shadow,
           color: Theme.of(context).colorScheme.surfaceContainer,
           margin:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 0),
+              const EdgeInsets.only(left: 16, right: 16, bottom: 12),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  context.localizedText(
-                    enText: TranslationHelper.getTranslatedField(
-                        translations: statue.translations,
-                        languageCode: "en",
-                        fieldGetter: (t) => t.name),
-                    boText: TranslationHelper.getTranslatedField(
-                        translations: statue.translations,
-                        languageCode: "bo",
-                        fieldGetter: (t) => t.name),
+                  context.localizedField(
+                    translations: statue.translations,
+                    getter: (t) => t.name,
                   ),
                   style: TextStyle(
                     fontSize: 18,
@@ -144,15 +126,9 @@ class DeityCardItem extends ConsumerWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: Text(
-                        context.localizedText(
-                          enText: TranslationHelper.getTranslatedField(
-                              translations: statue.translations,
-                              languageCode: "en",
-                              fieldGetter: (t) => t.description),
-                          boText: TranslationHelper.getTranslatedField(
-                              translations: statue.translations,
-                              languageCode: "bo",
-                              fieldGetter: (t) => t.description),
+                        context.localizedField(
+                          translations: statue.translations,
+                          getter: (t) => t.description,
                           maxLength: kDescriptionMaxLength,
                         ),
                         style: TextStyle(

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListView(
+      padding: const EdgeInsets.only(bottom: 100),
       physics: const BouncingScrollPhysics(),
       children: [
         const SizedBox(height: 16),
@@ -26,7 +27,7 @@ class SettingsScreen extends ConsumerWidget {
     return [
       SettingsCard(
         child: SettingsListTile(
-          leading: Image.asset('assets/images/cta_logo.png', width: 40),
+          leading: _buildLeadingIcon(context, assetPath: 'assets/images/cta_logo.png', size: 40),
           title: AppLocalizations.of(context)!.aboutUs,
           onTap: () => _showDialog(
             context,
@@ -36,7 +37,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       SettingsCard(
         child: SettingsListTile(
-          leading: const Icon(Icons.phone),
+          leading: _buildLeadingIcon(context, iconData: Icons.phone),
           title: AppLocalizations.of(context)!.contactUs,
           onTap: () => _showDialog(
             context,
@@ -46,7 +47,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       SettingsCard(
         child: SettingsListTile(
-          leading: Image.asset('assets/images/app_logo.png', width: 40),
+          leading: _buildLeadingIcon(context, assetPath: 'assets/images/app_logo.png', size: 44),
           title: AppLocalizations.of(context)!.aboutApp,
           onTap: () => _showDialog(
             context,
@@ -56,7 +57,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       SettingsCard(
         child: SettingsListTile(
-          leading: Image.asset('assets/images/religion.png', width: 40),
+          leading: _buildLeadingIcon(context, assetPath: 'assets/images/religion.png', size: 44),
           title: AppLocalizations.of(context)!.prayerApp,
           onTap: () => _showDialog(
             context,
@@ -66,17 +67,46 @@ class SettingsScreen extends ConsumerWidget {
       ),
       SettingsCard(
         child: SettingsListTile(
-          leading: const Icon(Icons.share),
+          leading: _buildLeadingIcon(context, iconData: Icons.share),
           title: AppLocalizations.of(context)!.shareApp,
           onTap: () {
             // open the app store link
             final String shareUrl =
-                Platform.isIOS ? kIosNeykorAppUrl : kAndriodNeykorAppUrl;
+                defaultTargetPlatform == TargetPlatform.iOS ? kIosNeykorAppUrl : kAndriodNeykorAppUrl;
             Share.share(shareUrl);
           },
         ),
       ),
     ];
+  }
+
+  Widget _buildLeadingIcon(BuildContext context, {String? assetPath, IconData? iconData, double size = 40.0}) {
+    if (assetPath != null) {
+      return SizedBox(
+        width: 44,
+        height: 44,
+        child: Center(
+          child: Image.asset(
+            assetPath,
+            width: size,
+            height: size,
+            fit: BoxFit.contain,
+          ),
+        ),
+      );
+    } else {
+      return SizedBox(
+        width: 44,
+        height: 44,
+        child: Center(
+          child: Icon(
+            iconData,
+            size: 26,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+      );
+    }
   }
 
   void _showDialog(BuildContext context, DialogContent content) {
@@ -210,7 +240,7 @@ class SettingsScreen extends ConsumerWidget {
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   // open the app store link
-                  final String downloadUrl = Platform.isIOS
+                  final String downloadUrl = defaultTargetPlatform == TargetPlatform.iOS
                       ? kIosTibetanPrayerAppUrl
                       : kAndriodTibetanPrayerAppUrl;
                   _launchUrl(downloadUrl);
@@ -242,7 +272,7 @@ class SettingsCard extends StatelessWidget {
     return Card(
       shadowColor: Theme.of(context).colorScheme.shadow,
       color: Theme.of(context).colorScheme.surfaceContainer,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 0),
       child: Column(children: [child]),
     );
   }

@@ -59,7 +59,7 @@ class SearchCardItem extends ConsumerWidget {
             shadowColor: Theme.of(context).colorScheme.shadow,
             color: Theme.of(context).colorScheme.surfaceContainer,
             margin:
-                const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 0),
+                const EdgeInsets.only(left: 16, right: 16, bottom: 12),
             child: Stack(
               alignment: Alignment.bottomRight,
               children: [
@@ -69,9 +69,9 @@ class SearchCardItem extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        context.localizedText(
-                          enText: searchableItem!.translations[1]!.name ?? '',
-                          boText: searchableItem!.translations[0]!.name ?? '',
+                        context.localizedField(
+                          translations: searchableItem.translations,
+                          getter: (t) => (t as dynamic).name?.toString() ?? '',
                         ),
                         style: const TextStyle(
                           fontSize: 18,
@@ -96,12 +96,10 @@ class SearchCardItem extends ConsumerWidget {
                           const SizedBox(width: 16),
                           Expanded(
                             child: Text(
-                              context.localizedText(
-                                enText: searchableItem!
-                                        .translations[1]!.description ??
-                                    '',
-                                boText: searchableItem!
-                                        .translations[0]!.description ??
+                              context.localizedField(
+                                translations: searchableItem.translations,
+                                getter: (t) =>
+                                    (t as dynamic).description?.toString() ??
                                     '',
                                 maxLength: kDescriptionMaxLength,
                               ),

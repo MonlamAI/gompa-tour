@@ -1,4 +1,4 @@
-/// Contains mapping of state names between English and Tibetan
+/// Contains mapping of state names between English, Tibetan, and Hindi
 class StateData {
   /// Map of state names with English (uppercase) as keys and Tibetan as values
   static const Map<String, String> stateTranslationsForGonpa = {
@@ -23,6 +23,29 @@ class StateData {
     "SOLOKHUMBU": "སོ་ལོ་ཁམ་བུ།",
   };
 
+  /// Map of state names with English (uppercase) as keys and Hindi as values
+  static const Map<String, String> stateHindiTranslationsForGonpa = {
+    "ARUNACHAL PRADESH": "अरुणाचल प्रदेश",
+    "BIHAR": "बिहार",
+    "CHHATTISGARH": "छत्तीसगढ़",
+    "DELHI": "दिल्ली",
+    "HIMACHAL PRADESH": "हिमाचल प्रदेश",
+    "KARNATAKA": "कर्नाटक",
+    "LADAKH": "लद्दाख",
+    "MEGHALAYA": "मेघालय",
+    "MADHYA PRADESH": "मध्य प्रदेश",
+    "MAHARASHTRA": "महाराष्ट्र",
+    "ODISHA": "ओडिशा",
+    "SIKKIM": "सिक्किम",
+    "UTTAR PRADESH": "उत्तर प्रदेश",
+    "UTTARAKHAND": "उत्तराखंड",
+    "WEST BENGAL": "पश्चिम बंगाल",
+    "KATHMANDU": "काठमांडू",
+    "LUMBINI": "लुंबिनी",
+    "POKHARA": "पोखरा",
+    "SOLOKHUMBU": "सोलुखुम्बु",
+  };
+
   /// Map of state names with English (uppercase) as keys and Tibetan as values for Pilgrimage
   static const Map<String, String> stateTranslationForPilgrim = {
     "ANDHRA PRADESH": "ཨན་དྷ་ར་པྲདེ་ཤ།",
@@ -37,21 +60,41 @@ class StateData {
     "LUMBINI": "ལུམ་བི་ཎི།",
   };
 
+  /// Map of state names with English (uppercase) as keys and Hindi as values for Pilgrimage
+  static const Map<String, String> stateHindiTranslationForPilgrim = {
+    "ANDHRA PRADESH": "आंध्र प्रदेश",
+    "ARUNACHAL PRADESH": "अरुणाचल प्रदेश",
+    "BIHAR": "बिहार",
+    "DELHI": "दिल्ली",
+    "HIMACHAL PRADESH": "हिमाचल प्रदेश",
+    "MADHYA PRADESH": "मध्य प्रदेश",
+    "MAHARASHTRA": "महाराष्ट्र",
+    "UTTAR PRADESH": "उत्तर प्रदेश",
+    "UTTARAKHAND": "उत्तराखंड",
+    "LUMBINI": "लुंबिनी",
+  };
+
   /// Get the localized state name based on the current locale
   static String getLocalizedStateNameForGonpa(
       String state, String languageCode) {
     final stateUpper = state.toUpperCase();
-    return languageCode == 'bo'
-        ? stateTranslationsForGonpa[stateUpper] ?? stateUpper
-        : stateUpper;
+    if (languageCode == 'bo') {
+      return stateTranslationsForGonpa[stateUpper] ?? stateUpper;
+    } else if (languageCode == 'hi') {
+      return stateHindiTranslationsForGonpa[stateUpper] ?? stateUpper;
+    }
+    return stateUpper;
   }
 
   // Get the localized state name based on the current locale for Pilgrimage
   static String getLocalizedStateNameForPilgrim(
       String state, String languageCode) {
     final stateUpper = state.toUpperCase();
-    return languageCode == 'bo'
-        ? stateTranslationForPilgrim[stateUpper] ?? stateUpper
-        : stateUpper;
+    if (languageCode == 'bo') {
+      return stateTranslationForPilgrim[stateUpper] ?? stateUpper;
+    } else if (languageCode == 'hi') {
+      return stateHindiTranslationForPilgrim[stateUpper] ?? stateUpper;
+    }
+    return stateUpper;
   }
 }

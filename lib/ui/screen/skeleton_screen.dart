@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:gompa_tour/states/language_state.dart';
 import 'package:gompa_tour/states/theme_mode_state.dart';
+import 'package:gompa_tour/ui/widget/language_dropdown.dart';
 import 'package:gompa_tour/ui/screen/qr_screen.dart';
 import 'package:gompa_tour/ui/screen/search_screen.dart';
 import 'package:gompa_tour/ui/screen/settings_screen.dart';
@@ -12,7 +13,7 @@ import '../../states/bottom_nav_state.dart';
 import '../widget/bottom_nav_bar.dart';
 import 'home_screen.dart';
 import 'map_screen.dart';
-import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
 class SkeletonScreen extends ConsumerWidget {
   const SkeletonScreen({super.key});
@@ -21,7 +22,7 @@ class SkeletonScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final int? navIndex = ref.watch(bottomNavProvider) as int?;
     final currentLanguage = ref.watch(languageProvider).currentLanguage;
-    final isIos = Platform.isIOS;
+    final isIos = defaultTargetPlatform == TargetPlatform.iOS;
 
     // Tab configuration
     List<Map<String, dynamic>> tabConfigurations = _tabConfiguration(context);
@@ -59,23 +60,9 @@ class SkeletonScreen extends ConsumerWidget {
         elevation: 1,
         actions: [
           currentTab["title"] == "home"
-              ? FlutterSwitch(
-                  width: 60,
-                  height: 30,
-                  toggleSize: 20,
-                  valueFontSize: currentLanguage == LanguageState.ENGLISH
-                      ? isIos
-                          ? 16.0
-                          : 14.0
-                      : 12.0,
-                  value: currentLanguage == LanguageState.TIBETAN,
-                  activeText: "EN",
-                  inactiveText: "བོད།",
-                  showOnOff: true,
-                  onToggle: (val) {
-                    ref.read(languageProvider.notifier).setLanguage(
-                        val ? LanguageState.TIBETAN : LanguageState.ENGLISH);
-                  },
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                  child: LanguageDropdown(isCompact: true),
                 )
               : const SizedBox(),
           MenuAnchor(
@@ -102,7 +89,7 @@ class SkeletonScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  minimumSize: WidgetStateProperty.all(Size(190, 48))),
+          minimumSize: WidgetStateProperty.all(const Size(220, 48))),
               menuChildren: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,23 +129,7 @@ class SkeletonScreen extends ConsumerWidget {
                           fontWeight: FontWeight.w400,
                         )),
                     const SizedBox(width: 20),
-                    FlutterSwitch(
-                      width: 55,
-                      height: 30,
-                      toggleSize: 20,
-                      valueFontSize: currentLanguage == LanguageState.ENGLISH
-                          ? 16.0
-                          : 12.0,
-                      value: currentLanguage == LanguageState.TIBETAN,
-                      activeText: "EN",
-                      inactiveText: "བོད།",
-                      showOnOff: true,
-                      onToggle: (val) {
-                        ref.read(languageProvider.notifier).setLanguage(val
-                            ? LanguageState.TIBETAN
-                            : LanguageState.ENGLISH);
-                      },
-                    ),
+            const LanguageDropdown(),
                   ],
                 ),
               ]),

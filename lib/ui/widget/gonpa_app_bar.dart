@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gompa_tour/l10n/generated/app_localizations.dart';
 import 'package:gompa_tour/states/language_state.dart';
 import 'package:gompa_tour/states/theme_mode_state.dart';
+import 'package:gompa_tour/ui/widget/language_dropdown.dart';
 
 class GonpaAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final String? title;
@@ -77,7 +78,7 @@ class GonpaAppBar extends ConsumerWidget implements PreferredSizeWidget {
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),
-          minimumSize: WidgetStateProperty.all(Size(190, 48))),
+          minimumSize: WidgetStateProperty.all(const Size(220, 48))),
       menuChildren: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,20 +113,7 @@ class GonpaAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   fontWeight: FontWeight.w400,
                 )),
             const SizedBox(width: 20),
-            FlutterSwitch(
-              width: 55,
-              height: 30,
-              toggleSize: 20,
-              valueFontSize: 12.0,
-              value: currentLanguage == LanguageState.TIBETAN,
-              activeText: "བོད།",
-              inactiveText: "EN",
-              showOnOff: true,
-              onToggle: (val) {
-                ref.read(languageProvider.notifier).setLanguage(
-                    val ? LanguageState.TIBETAN : LanguageState.ENGLISH);
-              },
-            ),
+            const LanguageDropdown(),
           ],
         ),
       ],
