@@ -39,7 +39,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_onSearchTextChanged);
     _loadCounts();
+  }
+
+  void _onSearchTextChanged() {
+    setState(() {});
   }
 
   void _loadCounts() async {
@@ -100,6 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final totalGonpa = ref.watch(totalGonpaProvider);
     final totalFestival = ref.watch(totalFestivalProvider);
     final totalPilgrimSite = ref.watch(totalPilgrimSiteProvider);
+    final isSearching = _searchController.text.trim().isNotEmpty;
 
     return Column(
       children: [
@@ -107,13 +113,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         _buildSearchBar(context),
         if (isLoading)
           const Center(child: CircularProgressIndicator())
+        else if (isSearching)
+          _buildSearchResults(context, searchState)
         else
           _buildCategoryCards(context,
               totalStatue: totalStatue,
               totalGonpa: totalGonpa,
               totalFestival: totalFestival,
               totalPilgrimSite: totalPilgrimSite),
-        _buildSearchResults(context, searchState),
       ],
     );
   }
@@ -208,65 +215,60 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       required int totalGonpa,
       required int totalFestival,
       required int totalPilgrimSite}) {
-    // Get the keyboard visibility status
-    final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    return Expanded(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final availableHeight = constraints.maxHeight - 20;
+          final availableWidth = constraints.maxWidth - 32;
+          final itemWidth = (availableWidth - 10) / 2;
+          final itemHeight = (availableHeight - 10) / 2;
+          final calculatedRatio = availableHeight > 100
+              ? (itemWidth / itemHeight).clamp(0.72, 0.95)
+              : 0.85;
 
-    return _searchController.text.isEmpty
-        ? Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final availableHeight = constraints.maxHeight - 20;
-                final availableWidth = constraints.maxWidth - 32;
-                final itemWidth = (availableWidth - 10) / 2;
-                final itemHeight = (availableHeight - 10) / 2;
-                final calculatedRatio = availableHeight > 100
-                    ? (itemWidth / itemHeight).clamp(0.72, 0.95)
-                    : 0.85;
-
-                return GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.only(
-                    left: 16,
-                    right: 16,
-                    top: 4,
-                    bottom: 16,
-                  ),
-                  physics: const BouncingScrollPhysics(),
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: calculatedRatio,
-                  children: [
-                    _buildCard(
-                      MenuType.deities,
-                      'assets/images/statues.jpg',
-                      context,
-                      totalStatue,
-                    ),
-                    _buildCard(
-                      MenuType.organization,
-                      'assets/images/monsatery.jpeg',
-                      context,
-                      totalGonpa,
-                    ),
-                    _buildCard(
-                      MenuType.pilgrimage,
-                      'assets/images/pilgrimage.jpg',
-                      context,
-                      totalPilgrimSite,
-                    ),
-                    _buildCard(
-                      MenuType.festival,
-                      'assets/images/Festivals.jpeg',
-                      context,
-                      totalFestival,
-                    ),
-                  ],
-                );
-              },
+          return GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            padding: const EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 4,
+              bottom: 16,
             ),
-          )
-        : const SizedBox();
+            physics: const BouncingScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: calculatedRatio,
+            children: [
+              _buildCard(
+                MenuType.deities,
+                'assets/images/statues.jpg',
+                context,
+                totalStatue,
+              ),
+              _buildCard(
+                MenuType.organization,
+                'assets/images/monsatery.jpeg',
+                context,
+                totalGonpa,
+              ),
+              _buildCard(
+                MenuType.pilgrimage,
+                'assets/images/pilgrimage.jpg',
+                context,
+                totalPilgrimSite,
+              ),
+              _buildCard(
+                MenuType.festival,
+                'assets/images/Festivals.jpeg',
+                context,
+                totalFestival,
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 
   Widget _buildCard(
@@ -288,7 +290,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           case MenuType.pilgrimage:
             context.push(PilgrimageListScreen.routeName);
             return;
-        }
+          }
       },
       child: Card(
         margin: EdgeInsets.zero,
@@ -339,22 +341,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildSearchResults(BuildContext context, SearchState searchState) {
     if (searchState.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
+      return const Expanded(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
-    return searchState.results.isNotEmpty
-        ? Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.only(bottom: 100),
-              itemCount: searchState.results.length,
-              itemBuilder: (context, index) {
-                var searchableItem = searchState.results[index];
-                return SearchCardItem(searchableItem: searchableItem);
-              },
+    if (searchState.results.isEmpty) {
+      return Expanded(
+        child: Center(
+          child: Text(
+            AppLocalizations.of(context)!.noRecordFound,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 16,
             ),
-          )
-        : const SizedBox();
+          ),
+        ),
+      );
+    }
+    return Expanded(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 100),
+        itemCount: searchState.results.length,
+        itemBuilder: (context, index) {
+          var searchableItem = searchState.results[index];
+          return SearchCardItem(searchableItem: searchableItem);
+        },
+      ),
+    );
   }
 
   String _getTitle(MenuType type, BuildContext context) {
@@ -372,6 +387,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   void dispose() {
+    _searchController.removeListener(_onSearchTextChanged);
     _searchController.dispose();
     _searchFocusNode.dispose();
     _searchDebouncer.dispose();

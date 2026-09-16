@@ -50,7 +50,7 @@ final searchRepositoryProvider = Provider<SearchRepository>((ref) {
 });
 
 final searchNotifierProvider =
-    StateNotifierProvider<SearchNotifier, SearchState>((ref) {
+    StateNotifierProvider.autoDispose<SearchNotifier, SearchState>((ref) {
   final repository = ref.watch(searchRepositoryProvider);
   return SearchNotifier(repository);
 });
